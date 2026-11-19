@@ -11,6 +11,8 @@ The [CV analysis](ai-cv-parsing-and-scoring.md) and [training engine](training-e
 
 ## Keep the evidence connected
 
+The detailed records and asynchronous handoffs are specified in [application architecture](architecture.md).
+
 Link the preparation record to the candidate, job description version, and source CV version. Carry the job requirement IDs from the comparison into the training blueprint and associate each assessment result with its competency. Use the diagnostic and subsequent scored attempts to choose practice priorities. Keep the CV-fit and assessment scores separate. If the candidate switches target jobs, evaluate readiness for the new job using its own requirements and assessment results.
 
 For example, a reporting internship may require SQL joins. If the CV mentions a database project but provides little evidence of joins, prioritize joins in the diagnostic. If the candidate struggles to retain unmatched rows, assign targeted practice and reassess with a fresh query. After the candidate meets the role's readiness criteria and the final session ends, provide a revised CV that clarifies the original project using supported details. A passed exercise can support a clearly labeled practice activity when appropriate, while workplace claims require their own evidence.

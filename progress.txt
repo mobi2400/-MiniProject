@@ -121,3 +121,23 @@ commands or commit references when they help someone reproduce the result.
   ordering, and practice that adapts to a specific error in docs/training-engine.md.
 - Added three pending browser journeys to features.json. Runtime verification
   awaits a runnable app. Pilot evidence and threshold calibration are pending.
+
+2026-11-19 | Candidate dashboard design
+- Added the dashboard wireframe, mobile layout, data inventory, and
+  action rules in docs/candidate-dashboard.md. Linked it from the product brief.
+- Added a pending desktop and mobile acceptance journey in features.json.
+- Next: verify the proposed layout with fixtures for setup, active training,
+  role switching, and final CV delivery when a runnable app is available.
+
+2026-11-19 | Application UI specification
+- Added docs/application-ui.md with 13 proposed page templates, navigation,
+  mobile behavior, and the assessment workspace from entry through feedback.
+- Linked the specification from docs/product.md and added a pending session
+  review and submission journey. Next: test the walkthrough in a prototype.
+
+2026-11-19 | Architecture and wiring
+- Added docs/architecture.md with service boundaries, record references,
+  end-to-end handoffs, retry and concurrency rules, and verification flows.
+- Linked the design from technical notes and the CV/training workflow.
+- Runtime verification awaits implementation. Database, queue, provider,
+  hosting, and retention choices remain open.

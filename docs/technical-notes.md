@@ -8,6 +8,8 @@
 
 ## Dependencies
 
+See [application architecture](architecture.md) for service boundaries, records, lifecycle, and recovery contracts.
+
 See [AI CV parsing and scoring](ai-cv-parsing-and-scoring.md) for the proposed extraction pipeline, comparison rubric, and verification cases.
 
 See [Training engine design](training-engine.md) for role-based question selection, grading, feedback, and reassessment.
