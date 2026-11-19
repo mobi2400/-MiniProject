@@ -68,6 +68,18 @@
     "passes": false
   },
   {
+    "id": "review-training-session-feedback",
+    "description": "After each training session, the candidate can see what they demonstrated, what needs work, and what to practice next.",
+    "steps": [
+      "For a target role with two required competencies, complete a diagnostic that demonstrates one competency and falls short on the other.",
+      "Open the session feedback and verify it shows the overall score and the score for each assessed competency once grading is complete.",
+      "Verify that the feedback identifies the demonstrated strength, cites the relevant answer for the weak area, and explains what the rubric expected.",
+      "Verify that the recommended next exercise targets the weak competency.",
+      "Complete guided practice and a reassessment. Verify that each shows feedback based on its own answers and labels any ungraded or untested competencies."
+    ],
+    "passes": false
+  },
+  {
     "id": "practice-and-reassess",
     "description": "A candidate can practice weak areas and repeat the assessment until the readiness criteria are met.",
     "steps": [
@@ -75,6 +87,162 @@
       "Verify that the site provides practice for a weak area and a way to take another assessment.",
       "Submit another below-criteria attempt and verify that the practice and reassessment cycle remains available.",
       "Submit an attempt that meets the criteria and verify that the site reports readiness for the selected role."
+    ],
+    "passes": false
+  },
+  {
+    "id": "receive-updated-cv-after-readiness",
+    "description": "A candidate receives an updated CV for the target job after completing the qualifying training session and reaching readiness.",
+    "steps": [
+      "Start preparation for a target job using a CV with a supported experience entry that can be clarified through an evidence-backed suggestion.",
+      "Complete a session that falls below the readiness criteria. Verify that session feedback is visible and the final updated CV is unavailable.",
+      "Complete the qualifying reassessment and verify that readiness is reported for the selected job.",
+      "Open the updated CV from the completed preparation result. Verify it reflects the supported improvement for the selected job and introduces no unsupported experience or qualifications.",
+      "Verify that the candidate can still access the original uploaded CV."
+    ],
+    "passes": false
+  },
+  {
+    "id": "resume-private-preparation",
+    "description": "A candidate can return to their own saved preparation.",
+    "steps": [
+      "Sign out after completing a session and reopen the preparation URL. Verify sign-in is required.",
+      "Sign back in and verify the role and session are restored. Open the URL as another candidate and verify the private result is inaccessible."
+    ],
+    "passes": false
+  },
+  {
+    "id": "preview-role-coverage",
+    "description": "Candidates can check assessment coverage before purchase.",
+    "steps": [
+      "Submit a job with a required competency missing from the reviewed question bank. Verify the missing skill is named and paid checkout is unavailable.",
+      "Submit a supported role and verify the preview shows the skills assessed, preparation terms, and final CV delivery condition."
+    ],
+    "passes": false
+  },
+  {
+    "id": "correct-cv-evidence",
+    "description": "Candidates can correct extraction errors before relying on CV feedback.",
+    "steps": [
+      "Open a parsed CV where a project skill was attributed to employment. Inspect the source and correct the attribution.",
+      "Rerun the analysis and verify the cited evidence and suggested edit refer to the corrected project entry. Reload and verify the correction persists."
+    ],
+    "passes": false
+  },
+  {
+    "id": "view-role-progress",
+    "description": "Candidates can trace progress on a job requirement across sessions.",
+    "steps": [
+      "Complete two independent assessments and one assisted practice task for a required skill.",
+      "Open the target role and verify dated scores, supporting feedback, and the next exercise. Verify assisted results are labeled and excluded from readiness.",
+      "Switch roles and verify the original readiness result applies only to its target role."
+    ],
+    "passes": false
+  },
+  {
+    "id": "approve-final-cv-edits",
+    "description": "A ready candidate can control what goes into their downloadable CV.",
+    "steps": [
+      "Open the final CV with two suggested changes and inspect each change beside its supporting evidence.",
+      "Accept one edit, decline the other, and download the revision. Verify only the accepted change appears and the original remains accessible."
+    ],
+    "passes": false
+  },
+  {
+    "id": "purchase-role-preparation",
+    "description": "Candidates can buy a disclosed preparation package for a supported role.",
+    "steps": [
+      "Verify checkout displays role, total price, currency, usage and refund terms. Cancel and confirm that paid access is inactive.",
+      "Complete a test payment and verify receipt and access for the selected role. Replay its confirmation and verify there is a single purchase and entitlement.",
+      "Sign back in and reopen the purchased preparation without paying again."
+    ],
+    "passes": false
+  },
+  {
+    "id": "recover-final-cv-export",
+    "description": "Candidates can recover the promised CV after an export failure.",
+    "steps": [
+      "Simulate an export failure after the qualifying session. Reopen the result and verify readiness is retained.",
+      "Retry generation and download the revision for the same role without another assessment or payment."
+    ],
+    "passes": false
+  },
+  {
+    "id": "delete-preparation",
+    "description": "Candidates can remove a preparation and its personal artifacts.",
+    "steps": [
+      "Create two preparations with distinct CVs. Select one for deletion and inspect the stated retention terms and affected records.",
+      "Confirm deletion and verify its CV, answers, results and downloaded-file link are inaccessible from the service. Reopen the second preparation and verify its files remain available."
+    ],
+    "passes": false
+  },
+  {
+    "id": "recover-paid-access",
+    "description": "A buyer can recover access when checkout succeeds but confirmation is delayed.",
+    "steps": [
+      "Complete a sandbox payment and delay the confirmation. Reopen the preparation and verify it shows payment pending, a support reference, and a way to check status.",
+      "Reconcile against the provider's confirmed transaction. Verify access and one receipt for the original order without repeating checkout.",
+      "Replay the confirmation after a confirmed refund. Verify the order shows refunded and paid access is not reactivated."
+    ],
+    "passes": false
+  },
+  {
+    "id": "resume-pending-grade",
+    "description": "A candidate can recover a submitted assessment after grading is interrupted.",
+    "steps": [
+      "Submit an unassisted assessment, interrupt grading, and reload. Verify the answers are saved and the attempt shows grading pending.",
+      "Retry the same submission from a second tab. Restore grading and verify exactly one score, one allowance debit, and one readiness contribution for that attempt.",
+      "Complete a separate fresh reassessment and verify the two qualifying attempts have distinct identifiers and question sets."
+    ],
+    "passes": false
+  },
+  {
+    "id": "protect-preparation-revisions",
+    "description": "A candidate's current report reflects the selected job and CV revisions.",
+    "steps": [
+      "Start a comparison, correct a CV attribution while it is running, and request a new comparison.",
+      "Complete the newer comparison first and deliver the older result last. Reload and verify the selected report still cites the corrected source.",
+      "Delete the preparation with an export pending. Complete the delayed export and verify neither the preparation nor its download reappears."
+    ],
+    "passes": false
+  },
+  {
+    "id": "challenge-assessment-result",
+    "description": "A candidate can request review of a disputed grade that affects readiness.",
+    "steps": [
+      "Submit a valid alternate answer to a scored item and use a fixture where it receives a below-threshold grade.",
+      "Open the feedback, identify the disputed criterion, submit a review request, and verify its status survives reload.",
+      "Have the assigned reviewer record a corrected rating and reason. Verify the candidate sees the decision, updated breakdown and recalculated readiness, with the original attempt counted once."
+    ],
+    "passes": false
+  },
+  {
+    "id": "resume-assessment-draft",
+    "description": "A candidate can resume the same assessment without losing a confirmed answer.",
+    "steps": [
+      "Open an assessment, enter two answers, wait for the saved indicator, and reload. Verify both answers, item order, and attempt ID are restored.",
+      "Edit the same answer in two tabs. Save the newer edit, then send the stale save. Verify the conflict is visible and the newer saved text survives.",
+      "Submit the attempt and replay an earlier draft save. Verify the submitted answers remain frozen."
+    ],
+    "passes": false
+  },
+  {
+    "id": "practice-a-specific-error",
+    "description": "Practice adapts to the error demonstrated in the candidate's work.",
+    "steps": [
+      "Use a reporting diagnostic where the candidate groups correctly but loses categories with zero sales. Verify the next lesson targets preserving unmatched rows.",
+      "Repeat the same error after a hint. Verify feedback explains the error with a worked example, then offers a different exercise.",
+      "Solve the new practice task and verify the engine recommends an independent transfer task while readiness still awaits qualifying assessments."
+    ],
+    "passes": false
+  },
+  {
+    "id": "verify-readiness-sequence",
+    "description": "Readiness reflects the latest qualifying evidence in submission order.",
+    "steps": [
+      "Under the proposed pilot rubric, submit three independent reassessments for one blueprint in the order pass, fail, pass. Deliver their grades out of order and verify the candidate has one consecutive pass.",
+      "Add a guided practice session and verify the streak is unchanged. Submit another eligible pass and verify a single readiness decision and one CV generation request.",
+      "Repeat with an unresolved middle grade and verify final readiness stays pending until all relevant results are settled."
     ],
     "passes": false
   }

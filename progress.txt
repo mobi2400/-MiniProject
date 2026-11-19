@@ -69,3 +69,55 @@ commands or commit references when they help someone reproduce the result.
   initialization script are still pending.
 - Next: resolve the CV editing workflow and use the product brief when
   preparing the Next.js baseline.
+
+2026-11-19 | AI CV parsing and scoring design
+- Added docs/ai-cv-parsing-and-scoring.md and linked it from the technical
+  notes. Documented evidence extraction, job comparison, an example scoring
+  rubric, and verification cases.
+- Documentation only. Checked Markdown links and whitespace. Feature
+  acceptance criteria and statuses are unchanged.
+- Next: confirm the supported upload formats and scoring rubric.
+
+2026-11-19 | Training engine design
+- Added docs/training-engine.md and linked it from the technical notes.
+  Documented question selection, answer verification, scoring, session
+  feedback, and proposed readiness criteria.
+- Checked Markdown links, feature JSON, and whitespace. Runtime checks
+  await implementation. Feature statuses remain pending.
+- Next: select the first pilot role and review sample questions, scoring
+  anchors, and readiness thresholds.
+
+2026-11-19 | Training feedback acceptance criteria
+- Added review-training-session-feedback to features.json. It covers
+  score breakdowns, answer-specific feedback, and the next practice action.
+- Validated the JSON and confirmed the existing acceptance criteria are
+  unchanged. The new feature awaits implementation and browser verification.
+
+2026-11-19 | CV and training handoff
+- Added docs/cv-and-training-workflow.md and linked it from the CV and
+  training designs. Updated the product brief to include final CV delivery.
+- Added receive-updated-cv-after-readiness to features.json. The revised CV
+  is provided after the qualifying session ends and readiness is recorded.
+- Checked local links, JSON, and whitespace. Runtime verification is pending.
+- Next: decide the revised CV format and review the handoff for the pilot role.
+
+2026-11-19 | Commercial pilot design review
+- Reviewed five design docs and ten feature entries. Added a commercial pilot
+  plan, linked it from the product brief, and added eight testable journeys.
+- The reporting internship and single-role purchase are proposals. Next:
+  validate the sample deliverable, coverage, and offer with pilot candidates.
+- Documentation checks cover JSON and local links. Runtime and buyer
+  validation remain pending.
+
+2026-11-19 | Engineering and field delivery review
+- Revised the commercial pilot rehearsal and training design. Added backlog
+  cases for payment recovery, interrupted grading, stale results and deletion,
+  and disputed grades. All require implementation and end-to-end testing.
+- Next: assign rehearsal owners and exercise the failure fixtures once the
+  corresponding services exist.
+
+2026-11-19 | Training engine robustness
+- Specified draft recovery, item exposure, score aggregation, readiness
+  ordering, and practice that adapts to a specific error in docs/training-engine.md.
+- Added three pending browser journeys to features.json. Runtime verification
+  awaits a runnable app. Pilot evidence and threshold calibration are pending.
