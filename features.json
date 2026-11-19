@@ -245,5 +245,27 @@
       "Repeat with an unresolved middle grade and verify final readiness stays pending until all relevant results are settled."
     ],
     "passes": false
+  },
+  {
+    "id": "view-candidate-dashboard",
+    "description": "A candidate can see role-specific progress and take the next preparation action on desktop and mobile.",
+    "steps": [
+      "Sign in with no preparation and verify the dashboard shows the first setup action.",
+      "Open a role with a completed CV comparison, a weak diagnostic result, and an in-progress assessment. Verify separate CV-fit and skill scores and that the primary action resumes the saved assessment.",
+      "Switch to a second role with a qualifying result and a failed CV export. Verify the first role's scores are cleared during loading and the selected role shows readiness and a retry action.",
+      "At mobile width, navigate by keyboard and verify the role selector, primary action, and session feedback links are visible and usable without horizontal scrolling."
+    ],
+    "passes": false
+  },
+  {
+    "id": "review-and-submit-session",
+    "description": "A candidate can navigate questions, review missing answers, and confirm one assessment submission on desktop or mobile.",
+    "steps": [
+      "Start an independent assessment with multiple questions. Answer one, move forward and back, and verify the saved answer and answered count.",
+      "At mobile width, open the question navigator using the keyboard, select an unanswered item, and verify focus reaches its prompt.",
+      "Open final review with one unanswered item. Verify the skip consequence is shown and return to edit an answer before confirming the skip.",
+      "Submit the reviewed attempt, reload during grading, and verify a single submission appears with pending status and later links to the session feedback."
+    ],
+    "passes": false
   }
 ]

@@ -26,3 +26,7 @@ The proposed paid pilot covers one target job. Candidates can inspect role cover
 - How are CV fit and assessment performance scored? What qualifies a candidate as ready?
 
 [Feature acceptance criteria](../features.json) · [Progress and handoff](../progress.txt)
+
+The signed-in experience is specified in the [candidate dashboard design](candidate-dashboard.md).
+
+See the [application UI specification](application-ui.md) for all 13 page templates, navigation, and the session workspace.
