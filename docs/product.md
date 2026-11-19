@@ -11,14 +11,17 @@ MiniProject helps pre-final and final-year students, internship seekers, and peo
 5. Review suggested CV edits tied to the target role. Suggestions use facts supported by the CV or candidate profile.
 6. Take a role-specific assessment and review the score and areas for improvement.
 7. Practice weak areas and reassess. The application reports readiness once the assessment meets the criteria for the selected role.
+8. Receive a revised, role-specific CV after the qualifying training session ends.
 
 The CV-fit score reflects the evidence shown in the CV. The assessment score reflects performance on role-specific tasks.
 
 ## Open decisions
 
+The proposed paid pilot covers one target job. Candidates can inspect role coverage before purchasing, track improvement across sessions, and approve evidence-backed edits to their final CV. See the [commercial pilot plan](commercial-pilot.md).
+
 - How do candidates register and sign in, and which profile fields do they provide?
 - Which CV formats and job-description submission methods are supported?
-- Do candidates apply suggested edits themselves, or can they edit and download a revised CV in the application?
+- Which file format should the updated CV use, and can candidates edit the generated revision?
 - What assessment and practice formats will the first release support?
 - How are CV fit and assessment performance scored? What qualifies a candidate as ready?
 
