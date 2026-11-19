@@ -1,1 +1,81 @@
-[]
+[
+  {
+    "id": "home-explains-application",
+    "description": "A visitor can learn what the application does from the homepage before signing in.",
+    "steps": [
+      "Open the site's root URL (/) in a browser session with no signed-in user.",
+      "Verify that the homepage loads and its explanation is visible without signing in.",
+      "Verify that the explanation identifies the task the application helps users perform and the outcome users can expect."
+    ],
+    "passes": false
+  },
+  {
+    "id": "create-candidate-profile",
+    "description": "A new user can create a candidate profile.",
+    "steps": [
+      "Start with a signed-in user who has no candidate profile.",
+      "Complete and submit the profile form with valid details.",
+      "Reload the profile and verify it shows the details just submitted."
+    ],
+    "passes": false
+  },
+  {
+    "id": "extract-cv-details",
+    "description": "A candidate can upload a CV and view the details extracted from it.",
+    "steps": [
+      "Sign in with a candidate profile and upload a supported CV with a known skill and experience entry.",
+      "View the extraction result and verify it shows the skill and experience present in the CV."
+    ],
+    "passes": false
+  },
+  {
+    "id": "submit-target-job",
+    "description": "A candidate can provide the job description they are preparing for.",
+    "steps": [
+      "Sign in with a candidate profile and submit a job description with a known role title and requirement.",
+      "Verify the submitted role and requirement are available for comparison with the candidate's CV."
+    ],
+    "passes": false
+  },
+  {
+    "id": "score-cv-fit",
+    "description": "A candidate can see how their CV matches their target job.",
+    "steps": [
+      "Use a CV that demonstrates one job requirement and omits another.",
+      "Run the comparison against the submitted job description.",
+      "Verify the result displays a CV-fit score, cites evidence for the matched requirement, and flags the omitted requirement as a gap in the CV."
+    ],
+    "passes": false
+  },
+  {
+    "id": "suggest-cv-improvements",
+    "description": "A candidate can see actionable CV improvements tied to the target job.",
+    "steps": [
+      "Open a comparison with a flagged gap and a relevant experience entry that could be clearer.",
+      "Request CV improvements and verify the feedback identifies what to change and which job requirement it addresses.",
+      "Verify any suggested wording uses facts supported by the candidate's CV or profile."
+    ],
+    "passes": false
+  },
+  {
+    "id": "assess-role-readiness",
+    "description": "A candidate can complete an assessment tailored to the target role and receive a score.",
+    "steps": [
+      "Start an assessment for a submitted job description with a known requirement.",
+      "Verify that at least one assessment item evaluates that requirement, then submit responses.",
+      "Verify the result shows an assessment score and identifies an area to improve when a response falls short."
+    ],
+    "passes": false
+  },
+  {
+    "id": "practice-and-reassess",
+    "description": "A candidate can practice weak areas and repeat the assessment until the readiness criteria are met.",
+    "steps": [
+      "Complete an assessment that falls below the readiness criteria.",
+      "Verify that the site provides practice for a weak area and a way to take another assessment.",
+      "Submit another below-criteria attempt and verify that the practice and reassessment cycle remains available.",
+      "Submit an attempt that meets the criteria and verify that the site reports readiness for the selected role."
+    ],
+    "passes": false
+  }
+]

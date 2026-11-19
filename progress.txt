@@ -25,3 +25,47 @@ commands or commit references when they help someone reproduce the result.
 - Configured main and the mobi2400/-MiniProject GitHub repository as origin.
 - Verified features.json parses as JSON before the initial tracking commit.
 - Next: capture the project brief and agree on the first feature.
+
+2026-11-19 | Discussion and acceptance criteria
+- Discuss the project in this chat before starting implementation.
+- Update features.json as requirements are agreed. Describe one concrete
+  user-visible behavior per entry. Write steps that state the starting
+  conditions, the action to take, and the observable result to verify.
+- Keep passes false until those steps have been verified end to end.
+
+2026-11-19 | Initial application decisions
+- Build the site with Next.js, integrate AI, and use JWT-based authentication.
+- Provide a public homepage that explains the application.
+- Added homepage acceptance steps to features.json. Browser verification is
+  pending implementation.
+- Open for discussion are the application's purpose, the AI-assisted workflow,
+  and how users sign in.
+
+2026-11-19 | Career preparation workflow
+- Audience includes pre-final and final-year students, internship seekers,
+  and people preparing for their next job.
+- The candidate creates a profile, uploads a CV for extraction, and submits
+  a target job description. The site scores CV fit, explains gaps, and
+  provides job-specific CV improvements.
+- The candidate takes a scored role-specific assessment, practices weak
+  areas, and repeats the assessment until the readiness criteria are met.
+- Added seven feature entries. All are pending end-to-end verification.
+- Open decisions include supported CV and job description formats, how
+  candidates apply CV changes, assessment format, scoring rubrics, and
+  the criteria for reporting readiness.
+
+2026-11-19 | Coding and production-readiness rules
+- Updated AGENTS.md with scope, code quality, data handling, failure handling,
+  production checks, and guidance for maintaining features.json and progress.txt.
+- Documentation only. Checked the tracked diff for whitespace errors. The
+  workspace has no runnable app yet, so runtime checks remain pending.
+- Next: agree on how candidates apply suggested CV edits.
+
+2026-11-19 | Project reference docs
+- Added docs/product.md for the audience, candidate journey, and product
+  decisions still open. Added docs/technical-notes.md for the agreed stack,
+  feature dependencies, local setup status, and verification scenarios.
+- Checked Markdown links, feature JSON, and whitespace. The application and
+  initialization script are still pending.
+- Next: resolve the CV editing workflow and use the product brief when
+  preparing the Next.js baseline.
