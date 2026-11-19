@@ -1,0 +1,27 @@
+MiniProject progress log
+
+Start each work session by reading this log and features.json. Review the
+working tree and recent Git history once available. Use the project's documented
+setup commands and run a smoke test when there is a runnable baseline.
+
+Work on the feature agreed in the project chat. In features.json, record each
+agreed feature with a stable id, a description, acceptance steps (steps), and
+a boolean passes field. Start with passes set to false and set it to true
+only after verifying the acceptance steps through the normal entry point.
+Keep the acceptance steps stable unless the agreed scope changes.
+
+Append a dated entry after meaningful decisions or work. Record what changed,
+the checks run and their results, any blocker, and the next step. Include
+commands or commit references when they help someone reproduce the result.
+
+2026-11-19 | Project tracking initialized
+- The project chat is the place to discuss scope and agree on features.
+- The workspace was empty at setup, with no Git history or runnable baseline.
+- features.json starts with an empty array pending agreed requirements.
+- Next: capture the project brief and turn the agreed user journeys into
+  features with testable acceptance steps.
+
+2026-11-19 | Git initialized
+- Configured main and the mobi2400/-MiniProject GitHub repository as origin.
+- Verified features.json parses as JSON before the initial tracking commit.
+- Next: capture the project brief and agree on the first feature.
