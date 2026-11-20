@@ -154,3 +154,14 @@ commands or commit references when they help someone reproduce the result.
 - npm lint, production build, and type check passed. A fresh browser tab
   loaded / without signing in and the main link reached the workflow section.
 - Next Phase 1 slice is account sign-in and persistent candidate profiles.
+
+2026-11-20 | Candidate accounts and profiles
+- Added account registration, sign-in, revocable JWT sessions, and
+  account-scoped SQLite profile storage under app/account, app/profile, and lib.
+- Lint, production build, and type check passed. Browser checks with two
+  synthetic accounts covered registration, save, reload, sign-out, sign-in,
+  signed-out redirect, and profile isolation.
+- Marked create-candidate-profile as passing. Preparation resume is pending
+  until preparation records exist. The next slice is Phase 2 job and CV intake.
+- Local storage uses Node 24 SQLite. Public pilot deployment still needs
+  persistent storage, backups, sign-in throttling, and account recovery.

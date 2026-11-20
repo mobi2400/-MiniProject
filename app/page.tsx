@@ -12,7 +12,10 @@ export default function Home() {
       <a className="skip" href="#main">Skip to content</a>
       <header className="shell header">
         <Link className="brand" href="/">MiniProject</Link>
-        <nav aria-label="Main navigation"><a href="#how-it-works">How it works</a></nav>
+        <nav className="header-links" aria-label="Main navigation">
+          <a href="#how-it-works">How it works</a>
+          <Link href="/account">Sign in</Link>
+        </nav>
       </header>
       <main id="main">
         <section className="shell hero" aria-labelledby="hero-title">

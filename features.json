@@ -17,7 +17,7 @@
       "Complete and submit the profile form with valid details.",
       "Reload the profile and verify it shows the details just submitted."
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "extract-cv-details",

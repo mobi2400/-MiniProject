@@ -33,6 +33,16 @@ h2 { font-size: clamp(1.65rem, 3vw, 2.25rem); letter-spacing: -.035em; }
 .steps li::marker { color: var(--indigo); font-weight: 800; }
 .steps p { margin: .6rem 0 0; color: var(--muted); }
 .footer { color: var(--muted); padding-block: 1.5rem; }
+.header-links { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; }
+.form-page { max-width: 32rem; padding-block: 2.5rem; }
+.form-page h1 { max-width: none; font-size: clamp(2rem, 6vw, 3.5rem); margin-block: 1.25rem; }
+.fields { display: grid; gap: 1rem; margin-block: 1.5rem; }
+.fields label { display: grid; gap: .4rem; font-weight: 650; }
+.fields input { width: 100%; padding: .65rem .75rem; border: 1px solid #77758c; border-radius: .45rem; font: inherit; }
+.fields p { margin: 0; }
+.fields button, .text-button { justify-self: start; border: 0; font: inherit; cursor: pointer; }
+.fields button:disabled { opacity: .65; cursor: wait; }
+.text-button { background: none; color: var(--indigo); text-decoration: underline; padding: 0; }
 
 @media (max-width: 48rem) {
   .hero, .steps { grid-template-columns: 1fr; }

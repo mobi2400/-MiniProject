@@ -87,6 +87,8 @@ For planning, work on listing-specific variants as drafts before readiness and a
 
 ## Local setup and verification
 
-The Next.js homepage requires Node.js 20.9 or later and npm. From the repository root, run `npm ci`, then `npm run dev` and open `http://localhost:3000`. The public homepage requires no environment variables. Run `npm run lint`, `npm run typecheck`, and `npm run build` to check the baseline. Serve the production build with `npm start`.
+Use Node.js 24 or later and npm. From the repository root, run `npm ci`, then `npm run dev` and open `http://localhost:3000`. The public homepage requires no environment variables. For accounts, copy `.env.example` to `.env.local` and set a random `SESSION_SECRET` using the command in the example. Account and profile records use SQLite at `.data/miniproject.sqlite` by default. Set `DATABASE_PATH` to use a different persistent location.
+
+Run `npm run lint`, `npm run typecheck`, and `npm run build` to check the application. Serve the production build with `npm start` behind HTTPS for secure session cookies. SQLite is the current single-instance choice. Before a public pilot, configure persistent storage, backup, sign-in throttling, and account recovery.
 
 Use sample data with a known CV skill and experience entry, a job requirement supported by the CV, and one missing from it. Verify the comparison shows both cases. When the assessment is available, use answers that fall below and meet the agreed readiness criteria to exercise both outcomes. Follow the verification workflow in [AGENTS.md](../AGENTS.md) and record results against [features.json](../features.json).
