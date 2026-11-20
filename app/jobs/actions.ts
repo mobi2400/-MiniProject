@@ -38,7 +38,18 @@ export async function searchSavedJobs(source?: string) {
   if (!titles.length) return { error: "Save at least one search title first." };
   const boards = configuredBoards().filter(({ id }) => !source || source === id);
   if (!boards.length) return { error: "No job boards are configured for this search." };
-  return { results: await Promise.all(boards.map((board) => searchBoard(board, titles))) };
+  const results = await Promise.all(boards.map((board) => searchBoard(board, titles)));
+  const closed = db().prepare(`
+    SELECT s.source_id, s.listing_id FROM listing_snapshots s
+    JOIN listing_checks c ON c.preparation_id = s.preparation_id
+    JOIN preparations p ON p.id = s.preparation_id
+    WHERE p.account_id = ? AND c.status = 'closed'
+  `).all(account) as { source_id: string; listing_id: string }[];
+  const unavailable = new Set(closed.map((entry) => `${entry.source_id}:${entry.listing_id}`));
+  return { results: results.map((result) => "jobs" in result ? {
+    ...result,
+    jobs: result.jobs.filter((job) => !unavailable.has(`${result.board.id}:${job.listingId}`)),
+  } : result) };
 }
 
 export async function saveSearchTitles(_: SearchTitleState, form: FormData): Promise<SearchTitleState> {

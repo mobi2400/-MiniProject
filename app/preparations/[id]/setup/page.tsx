@@ -5,6 +5,7 @@ import { readListingSnapshot, readTargetJob } from "../../../../lib/preparations
 import { requireAccount } from "../../../../lib/session";
 import { CvForm } from "./cv-form";
 import { EvidenceForm } from "./evidence-form";
+import { ListingStatus } from "./listing-status";
 
 export default async function PreparationSetup({ params }: { params: Promise<{ id: string }> }) {
   const accountId = await requireAccount();
@@ -18,6 +19,7 @@ export default async function PreparationSetup({ params }: { params: Promise<{ i
       <Link href="/dashboard">Your preparations</Link>
       <h1>{job.title}</h1>
       {listing && <p>{listing.company} · {listing.location} · <a href={listing.url}>Original posting</a></p>}
+      {listing && <ListingStatus id={id} status={listing.status} />}
       <h2>Saved job description</h2>
       <p className="saved-description">{job.description}</p>
       <p><Link href={`/preparations/${id}/delete`}>Delete preparation</Link></p>

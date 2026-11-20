@@ -29,6 +29,7 @@ export async function searchBoard(board: Board, titles: string[], request = fetc
     const jobs: Listing[] = [];
     for (const job of payload.jobs) {
       if (!Number.isSafeInteger(job?.id) || job.id < 1 || typeof job.title !== "string" || typeof job.absolute_url !== "string") continue;
+      if (Date.parse(job.application_deadline) <= Date.now()) continue;
       if (!titles.some((title) => job.title.toLowerCase().includes(title.toLowerCase()))) continue;
       const url = URL.parse(job.absolute_url);
       if (!url || url.protocol !== "https:" || url.username || url.password) continue;

@@ -93,6 +93,11 @@ export function db() {
       location TEXT NOT NULL,
       captured_at INTEGER NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS listing_checks (
+      preparation_id TEXT PRIMARY KEY REFERENCES listing_snapshots(preparation_id) ON DELETE CASCADE,
+      status TEXT NOT NULL CHECK (status IN ('open', 'closed')),
+      checked_at INTEGER NOT NULL
+    );
   `);
   database = connection;
   return connection;

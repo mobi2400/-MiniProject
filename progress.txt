@@ -303,3 +303,12 @@ commands or commit references when they help someone reproduce the result.
   production build, and TypeScript passed.
 - select-listing-as-target-job stays pending until its CV comparison and
   coverage journey is verified. Saved listing closure handling is pending.
+
+2026-11-20 | Saved listing status
+- Added an owner-scoped availability check for saved postings. Status
+  updates preserve the frozen job, CV versions, and training records.
+- Browser verified a live status refresh and persistence after reload.
+  Fixtures covered removed and expired jobs, source failures, and search
+  filtering. Lint, production build, and TypeScript passed.
+- Closed-listing browser acceptance with a saved tailored variant
+  remains open. Next: connect listing keywords to CV evidence and variants.

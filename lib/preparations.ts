@@ -17,9 +17,24 @@ type ListingSnapshot = { sourceId: string; listingId: string; url: string; compa
 
 export function readListingSnapshot(accountId: string, id: string) {
   return db().prepare(`
-    SELECT url, company, location, captured_at FROM listing_snapshots s
-    JOIN preparations p ON p.id = s.preparation_id WHERE p.id = ? AND p.account_id = ?
-  `).get(id, accountId) as { url: string; company: string; location: string; captured_at: number } | undefined;
+    SELECT s.url, s.company, s.location, s.source_id, s.listing_id, c.status
+    FROM listing_snapshots s JOIN preparations p ON p.id = s.preparation_id
+    LEFT JOIN listing_checks c ON c.preparation_id = s.preparation_id
+    WHERE p.id = ? AND p.account_id = ?
+  `).get(id, accountId) as {
+    url: string; company: string; location: string; source_id: string; listing_id: string;
+    status: "open" | "closed" | null;
+  } | undefined;
+}
+
+export function saveListingStatus(account: string, id: string, status: "open" | "closed", checkedAt: number) {
+  db().prepare(`
+    INSERT INTO listing_checks (preparation_id, status, checked_at)
+    SELECT p.id, ?, ? FROM preparations p JOIN listing_snapshots s ON s.preparation_id = p.id
+    WHERE p.id = ? AND p.account_id = ?
+    ON CONFLICT (preparation_id) DO UPDATE SET status = excluded.status, checked_at = excluded.checked_at
+    WHERE excluded.checked_at >= listing_checks.checked_at
+  `).run(status, checkedAt, id, account);
 }
 
 export function createPreparation(accountId: string, id: string, title: string, description: string, listing?: ListingSnapshot) {
