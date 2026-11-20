@@ -277,3 +277,11 @@ commands or commit references when they help someone reproduce the result.
   and confirmed scores stayed scoped. Lint, build, and TypeScript passed.
 - Dashboard acceptance remains open for mobile layout, in-flight loading,
   and failed export recovery.
+
+2026-11-20 | Job search title preferences
+- Added a private job search screen with editable saved titles and
+  suggestions citing CV evidence.
+- Browser verified suggestion edits, reload persistence, manual entry
+  without a CV, and account isolation. Lint, build, and TypeScript passed.
+- choose-job-search-titles remains pending until listing search consumes
+  the saved titles. Next: wire aggregated search and source status.

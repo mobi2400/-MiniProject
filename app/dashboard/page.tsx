@@ -66,6 +66,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
     <main className="shell form-page dashboard">
       <Link href="/">MiniProject</Link>
       <h1>Your preparations</h1>
+      <p><Link href="/jobs">Job search</Link></p>
       {profile ? <Link className="button" href="/preparations/new">Add a target job</Link> : <Link href="/profile">Complete your profile</Link>}
       {preparations.length ? (
         <nav aria-label="Select a role">

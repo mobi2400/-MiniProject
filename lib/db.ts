@@ -80,6 +80,10 @@ export function db() {
     );
     CREATE UNIQUE INDEX IF NOT EXISTS one_open_reassessment
       ON reassessments(preparation_id, job_version) WHERE score IS NULL;
+    CREATE TABLE IF NOT EXISTS job_search_preferences (
+      account_id TEXT PRIMARY KEY REFERENCES accounts(id) ON DELETE CASCADE,
+      titles_json TEXT NOT NULL
+    );
   `);
   database = connection;
   return connection;
