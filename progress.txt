@@ -260,3 +260,12 @@ commands or commit references when they help someone reproduce the result.
   and original content, invalid selections, and signed-out access.
 - Lint, production build, and TypeScript passed. Browser download and
   full release acceptance remain pending.
+
+2026-11-20 | Preparation deletion
+- Added a confirmation page and an owner-scoped, retry-safe deletion action.
+  SQLite cascades remove the preparation's CV, comparison, and training data.
+- Browser verified confirmation and affected-record disclosures. An isolated
+  database integration check verified ownership, cascade, retries, and
+  preservation of a sibling preparation. Lint, build, and TypeScript passed.
+- Browser confirmation submission and invalidation of old download links
+  remain to be verified. Deletion acceptance stays open.

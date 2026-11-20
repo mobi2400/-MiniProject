@@ -18,6 +18,7 @@ export default async function PreparationSetup({ params }: { params: Promise<{ i
       <h1>{job.title}</h1>
       <h2>Saved job description</h2>
       <p className="saved-description">{job.description}</p>
+      <p><Link href={`/preparations/${id}/delete`}>Delete preparation</Link></p>
       <h2>CV evidence</h2>
       <CvForm preparationId={id} />
       {cv && (

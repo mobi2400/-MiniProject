@@ -9,7 +9,7 @@ export function db() {
   // The database lives on the runtime volume and must stay outside the build.
   const path = resolve(/* turbopackIgnore: true */ process.env.DATABASE_PATH || ".data/miniproject.sqlite");
   mkdirSync(dirname(path), { recursive: true });
-  const connection = new DatabaseSync(path, { timeout: 5000 });
+  const connection = new DatabaseSync(path, { timeout: 5000, enableForeignKeyConstraints: true });
   connection.exec(`
     CREATE TABLE IF NOT EXISTS accounts (
       id TEXT PRIMARY KEY,

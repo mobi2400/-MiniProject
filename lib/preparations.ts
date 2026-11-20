@@ -1,5 +1,9 @@
 import { db } from "./db";
 
+export function deletePreparation(accountId: string, preparationId: string) {
+  db().prepare("DELETE FROM preparations WHERE id = ? AND account_id = ?").run(preparationId, accountId);
+}
+
 export function readTargetJob(accountId: string, preparationId: string) {
   return db().prepare(`
     SELECT j.title, j.description, j.version
