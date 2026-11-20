@@ -36,7 +36,10 @@ export default async function Reassessment({ params }: { params: Promise<{ id: s
             <p>Score: {latest.score}%</p>
             <p>{latest.question.feedback}</p>
           </section>}
-          {ready ? <p role="status">Readiness criteria met for SQL joins.</p> :
+          {ready ? <section className="fields">
+            <p role="status">Readiness criteria met for SQL joins.</p>
+            <Link className="button" href={`/preparations/${id}/revised-cv`}>Review revised CV</Link>
+          </section> :
             attempts.length >= sqlJoinQuestions.length - 1 ? <p>Fresh questions are unavailable for this role. Your saved results remain accessible.</p> :
               <form className="fields" action={startReassessment.bind(null, id, attempts.length)}>
                 <button className="button">{latest ? "Start another reassessment" : "Start reassessment"}</button>

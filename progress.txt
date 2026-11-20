@@ -251,3 +251,12 @@ commands or commit references when they help someone reproduce the result.
   attempts, and readiness after reload. Lint, build, and TypeScript passed.
 - Practice is currently scoped to the first diagnostic gap. General
   sessions, saved drafts, and readiness-backed CV delivery remain pending.
+
+2026-11-20 | Pilot revised CV delivery
+- Added readiness-gated CV review and text download with selected,
+  evidence-backed highlights. Kept original CV bytes separately downloadable.
+- Browser verified the readiness-to-review path and two evidence choices.
+  File-picker automation timed out. HTTP integration verified exact revised
+  and original content, invalid selections, and signed-out access.
+- Lint, production build, and TypeScript passed. Browser download and
+  full release acceptance remain pending.
