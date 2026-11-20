@@ -4,6 +4,7 @@ import { db } from "../../lib/db";
 import { suggestJobTitles } from "../../lib/job-search-titles";
 import { requireAccount } from "../../lib/session";
 import { TitleForm } from "./title-form";
+import { SearchResults } from "./search-results";
 
 export default async function Jobs() {
   const account = await requireAccount();
@@ -25,6 +26,7 @@ export default async function Jobs() {
       <h1>Job search</h1>
       <TitleForm initialTitles={stored ? JSON.parse(stored.titles_json) as string[] : []}
         suggestions={suggestJobTitles(cv?.evidence ?? [])} />
+      <SearchResults key={stored?.titles_json ?? ""} />
     </main>
   );
 }

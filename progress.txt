@@ -285,3 +285,12 @@ commands or commit references when they help someone reproduce the result.
   without a CV, and account isolation. Lint, build, and TypeScript passed.
 - choose-job-search-titles remains pending until listing search consumes
   the saved titles. Next: wire aggregated search and source status.
+
+2026-11-20 | Job board search
+- Connected saved titles to opt-in Greenhouse boards with source status,
+  URL deduplication, source and location filters, and per-board retry.
+- Browser verified a candidate without a CV could search live listings,
+  filter results, and retry an unavailable board while retaining results.
+  Fixtures verified cross-board deduplication and recovery. Production
+  build, lint, and types passed. Marked choose-job-search-titles passing.
+- Next: save listing snapshots and use them to create preparations.

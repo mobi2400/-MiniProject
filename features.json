@@ -276,7 +276,7 @@
       "Remove one suggested title, edit another, and add a title manually. Save and reload, and verify the saved list matches the edits.",
       "Sign in with a candidate who has no CV and verify that titles can still be entered manually and a search can run."
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "aggregate-job-listings",
