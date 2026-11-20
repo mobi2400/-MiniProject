@@ -328,7 +328,7 @@
       "Open keyword analysis and verify it lists the listing's keywords, marks each as present or missing in the CV, and cites where each present one appears.",
       "Verify the result shows a keyword-coverage figure labeled as an estimate and not as a guaranteed ATS result."
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "confirm-skills-before-adding",

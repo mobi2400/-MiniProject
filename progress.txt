@@ -312,3 +312,11 @@ commands or commit references when they help someone reproduce the result.
   filtering. Lint, production build, and TypeScript passed.
 - Closed-listing browser acceptance with a saved tailored variant
   remains open. Next: connect listing keywords to CV evidence and variants.
+
+2026-11-20 | Listing keyword coverage
+- Added recognized keyword overlap and source citations on listing-backed
+  CV comparisons. The percentage is labeled as a coverage estimate.
+- Browser verified a two-keyword listing at 50% coverage. Assertions covered
+  term boundaries, punctuation, whitespace, and empty results. Lint,
+  production build, and TypeScript passed. Marked analyze-ats-keywords passing.
+- Next: capture candidate-confirmed evidence for missing keywords.
