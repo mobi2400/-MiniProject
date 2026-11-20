@@ -14,6 +14,7 @@ export default async function Profile() {
       <Link href="/">MiniProject</Link>
       <h1>Candidate profile</h1>
       <ProfileForm name={profile?.name ?? ""} goal={profile?.career_goal ?? ""} />
+      {profile && <p><Link href="/dashboard">Your preparations</Link></p>}
       <form action={signOut}><button className="text-button">Sign out</button></form>
     </main>
   );

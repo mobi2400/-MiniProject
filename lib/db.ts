@@ -26,6 +26,19 @@ export function db() {
       name TEXT NOT NULL,
       career_goal TEXT NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS preparations (
+      id TEXT PRIMARY KEY,
+      account_id TEXT NOT NULL REFERENCES profiles(account_id) ON DELETE CASCADE,
+      created_at INTEGER NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS preparations_owner ON preparations(account_id, created_at);
+    CREATE TABLE IF NOT EXISTS target_job_versions (
+      preparation_id TEXT NOT NULL REFERENCES preparations(id) ON DELETE CASCADE,
+      version INTEGER NOT NULL,
+      title TEXT NOT NULL,
+      description TEXT NOT NULL,
+      PRIMARY KEY (preparation_id, version)
+    );
   `);
   database = connection;
   return connection;

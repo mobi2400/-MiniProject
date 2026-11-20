@@ -39,6 +39,8 @@ h2 { font-size: clamp(1.65rem, 3vw, 2.25rem); letter-spacing: -.035em; }
 .fields { display: grid; gap: 1rem; margin-block: 1.5rem; }
 .fields label { display: grid; gap: .4rem; font-weight: 650; }
 .fields input { width: 100%; padding: .65rem .75rem; border: 1px solid #77758c; border-radius: .45rem; font: inherit; }
+.fields textarea { width: 100%; padding: .65rem .75rem; border: 1px solid #77758c; border-radius: .45rem; font: inherit; resize: vertical; }
+.saved-description { white-space: pre-wrap; overflow-wrap: anywhere; }
 .fields p { margin: 0; }
 .fields button, .text-button { justify-self: start; border: 0; font: inherit; cursor: pointer; }
 .fields button:disabled { opacity: .65; cursor: wait; }

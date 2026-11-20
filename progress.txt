@@ -165,3 +165,13 @@ commands or commit references when they help someone reproduce the result.
   until preparation records exist. The next slice is Phase 2 job and CV intake.
 - Local storage uses Node 24 SQLite. Public pilot deployment still needs
   persistent storage, backups, sign-in throttling, and account recovery.
+
+2026-11-20 | Phase 2 target job intake
+- Added a private preparations dashboard, job intake form, and versioned
+  target job records through app/dashboard, app/preparations, and lib.
+- Lint, production build, and type check passed. Browser testing verified
+  save, reload, dashboard listing, signed-out redirect, and a second
+  account receiving a 404 on the saved preparation link.
+- Job submission remains pending in features.json until the CV comparison
+  consumes the saved version. Session resume awaits the training engine.
+- Next: connect private CV intake and versioned comparison inputs.
