@@ -329,3 +329,12 @@ commands or commit references when they help someone reproduce the result.
   serialization. Lint, production build, and TypeScript passed.
 - Next: wire confirmed facts into reviewable tailored CV variants.
   confirm-skills-before-adding remains pending until generation is verified.
+
+2026-11-20 | Listing-specific tailored CV drafts
+- Added persisted draft generation with before and after text and exact CV
+  excerpts or candidate-confirmed claims. Stale drafts require regeneration.
+- Browser verified a learning gap was excluded, a later confirmed fact
+  appeared after regeneration, and the draft survived reload. Checked
+  original CV bytes. Lint, build, and TypeScript passed.
+- Marked generate-tailored-resume-microedits passing. Approvals, wording
+  changes, and readiness-gated tailored downloads remain pending.

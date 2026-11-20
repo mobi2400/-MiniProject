@@ -351,7 +351,7 @@
       "Verify no edit introduces experience, employers, dates, or qualifications absent from the CV, profile, or confirmed skills.",
       "Verify the original uploaded CV is unchanged and still accessible."
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "approve-tailored-edits",

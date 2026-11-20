@@ -108,6 +108,15 @@ export function db() {
       FOREIGN KEY (preparation_id, job_version) REFERENCES target_job_versions(preparation_id, version) ON DELETE CASCADE,
       CHECK ((status = 'have' AND length(trim(detail)) > 0) OR (status <> 'have' AND detail = ''))
     );
+    CREATE TABLE IF NOT EXISTS tailored_cv_drafts (
+      preparation_id TEXT PRIMARY KEY REFERENCES listing_snapshots(preparation_id) ON DELETE CASCADE,
+      job_version INTEGER NOT NULL,
+      cv_version INTEGER NOT NULL,
+      edits_json TEXT NOT NULL,
+      generated_at INTEGER NOT NULL,
+      FOREIGN KEY (preparation_id, job_version) REFERENCES target_job_versions(preparation_id, version) ON DELETE CASCADE,
+      FOREIGN KEY (preparation_id, cv_version) REFERENCES cv_versions(preparation_id, version) ON DELETE CASCADE
+    );
   `);
   database = connection;
   return connection;

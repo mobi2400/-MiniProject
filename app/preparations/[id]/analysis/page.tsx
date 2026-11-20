@@ -35,6 +35,7 @@ export default async function Analysis({ params }: { params: Promise<{ id: strin
           <p><Link href={`/preparations/${id}/offer`}>Preview role coverage</Link></p>
           {listing && <KeywordCoverage account={account} id={id} jobVersion={job.version} cvVersion={cv.version}
             description={job.description} evidence={cv.evidence} />}
+          {listing && <p><Link href={`/preparations/${id}/tailored-cv`}>Tailor CV for this listing</Link></p>}
           <CompareForm key={`${id}:${job.version}:${cv.version}`} evidence={cv.evidence}
             report={report} save={saveComparison.bind(null, id, cv.version, job.version)}
             suggest={comparisonConfig() ? suggestComparison.bind(null, id, cv.version, job.version) : undefined} />
