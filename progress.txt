@@ -175,3 +175,11 @@ commands or commit references when they help someone reproduce the result.
 - Job submission remains pending in features.json until the CV comparison
   consumes the saved version. Session resume awaits the training engine.
 - Next: connect private CV intake and versioned comparison inputs.
+
+2026-11-20 | Private CV intake
+- Added account-scoped, versioned UTF-8 text CV uploads and displayed
+  extracted section evidence with source line numbers on preparation setup.
+- Browser upload and reload preserved the fixture skill and experience.
+  Parser assertions, lint, production build, and type checking passed.
+- Full extraction is pending AI enrichment and broader document formats.
+  Next: connect validated CV evidence and the saved job version to comparison.

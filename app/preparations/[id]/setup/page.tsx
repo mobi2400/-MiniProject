@@ -1,19 +1,32 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { readCv } from "../../../../lib/cv";
 import { readTargetJob } from "../../../../lib/preparations";
 import { requireAccount } from "../../../../lib/session";
+import { CvForm } from "./cv-form";
 
 export default async function PreparationSetup({ params }: { params: Promise<{ id: string }> }) {
   const accountId = await requireAccount();
   const { id } = await params;
   const job = readTargetJob(accountId, id);
   if (!job) notFound();
+  const cv = readCv(accountId, id);
   return (
     <main className="shell form-page">
       <Link href="/dashboard">Your preparations</Link>
       <h1>{job.title}</h1>
       <h2>Saved job description</h2>
       <p className="saved-description">{job.description}</p>
+      <h2>CV evidence</h2>
+      <CvForm preparationId={id} />
+      {cv && (
+        <section aria-label="Extracted CV evidence">
+          <p role="status">Saved {cv.filename}, version {cv.version}.</p>
+          <ul>{cv.evidence.map(({ section, excerpt, line }) => (
+            <li key={line}><strong>{section}</strong> · Line {line}<p className="saved-description">{excerpt}</p></li>
+          ))}</ul>
+        </section>
+      )}
     </main>
   );
 }

@@ -39,6 +39,15 @@ export function db() {
       description TEXT NOT NULL,
       PRIMARY KEY (preparation_id, version)
     );
+    CREATE TABLE IF NOT EXISTS cv_versions (
+      id TEXT PRIMARY KEY,
+      preparation_id TEXT NOT NULL REFERENCES preparations(id) ON DELETE CASCADE,
+      version INTEGER NOT NULL,
+      filename TEXT NOT NULL,
+      source BLOB NOT NULL,
+      evidence_json TEXT NOT NULL,
+      UNIQUE (preparation_id, version)
+    );
   `);
   database = connection;
   return connection;
