@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { readCv } from "../../../../lib/cv";
+import { comparisonConfig } from "../../../../lib/ai-comparison";
 import type { Requirement } from "../../../../lib/cv-fit";
 import { db } from "../../../../lib/db";
 import { readTargetJob } from "../../../../lib/preparations";
 import { requireAccount } from "../../../../lib/session";
 import { CompareForm } from "./compare-form";
-import { saveComparison } from "./actions";
+import { saveComparison, suggestComparison } from "./actions";
 
 export default async function Analysis({ params }: { params: Promise<{ id: string }> }) {
   const account = await requireAccount();
@@ -30,7 +31,8 @@ export default async function Analysis({ params }: { params: Promise<{ id: strin
         <>
           <p>Comparing CV version {cv.version} with job version {job.version}.</p>
           <CompareForm key={`${id}:${job.version}:${cv.version}`} evidence={cv.evidence}
-            report={report} save={saveComparison.bind(null, id, cv.version, job.version)} />
+            report={report} save={saveComparison.bind(null, id, cv.version, job.version)}
+            suggest={comparisonConfig() ? suggestComparison.bind(null, id, cv.version, job.version) : undefined} />
         </>
       ) : <p>Upload a CV in preparation setup to compare it with this job.</p>}
     </main>

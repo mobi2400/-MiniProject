@@ -200,3 +200,12 @@ commands or commit references when they help someone reproduce the result.
   uploading a replacement CV and rejecting a stale save from another tab.
 - Validation assertions, lint, production build and TypeScript passed.
   AI matching remains pending. Next: wire automatic matching to saved reports.
+
+2026-11-20 | AI comparison drafts
+- Added configurable OpenAI Responses integration, explicit candidate
+  initiation, validated job quotes and CV citations, and manual review.
+- Mocked provider checks rejected unknown citations, fabricated requirement
+  text, duplicate requirements, and provider errors. Lint, TypeScript and
+  the production build passed.
+- Live provider and browser verification of the AI path remain pending.
+  Next: verify with a configured model using synthetic documents.

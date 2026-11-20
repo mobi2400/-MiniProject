@@ -87,6 +87,8 @@ For planning, work on listing-specific variants as drafts before readiness and a
 
 ## Local setup and verification
 
+AI comparison is optional. Set `OPENAI_API_KEY` and `OPENAI_COMPARISON_MODEL` on the server to enable generation of candidate-reviewed drafts. Selecting the AI draft action sends the job description and bounded CV evidence excerpts to OpenAI. The manual comparison path is available without provider credentials. Before enabling the feature in a public pilot, verify the selected model on synthetic CV/job pairs and confirm provider data handling and usage limits.
+
 Use Node.js 24 or later and npm. From the repository root, run `npm ci`, then `npm run dev` and open `http://localhost:3000`. The public homepage requires no environment variables. For accounts, copy `.env.example` to `.env.local` and set a random `SESSION_SECRET` using the command in the example. Account and profile records use SQLite at `.data/miniproject.sqlite` by default. Set `DATABASE_PATH` to use a different persistent location.
 
 Run `npm run lint`, `npm run typecheck`, and `npm run build` to check the application. Serve the production build with `npm start` behind HTTPS for secure session cookies. SQLite is the current single-instance choice. Before a public pilot, configure persistent storage, backup, sign-in throttling, and account recovery.

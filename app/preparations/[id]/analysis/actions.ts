@@ -1,11 +1,30 @@
 "use server";
 
 import { notFound } from "next/navigation";
+import { comparisonConfig, requestComparison } from "../../../../lib/ai-comparison";
 import { readCv } from "../../../../lib/cv";
 import { calculateCvFit, validateRequirements } from "../../../../lib/cv-fit";
 import { db } from "../../../../lib/db";
 import { readTargetJob } from "../../../../lib/preparations";
 import { requireAccount } from "../../../../lib/session";
+
+export async function suggestComparison(id: string, cvVersion: number, jobVersion: number) {
+  const account = await requireAccount();
+  const job = readTargetJob(account, id);
+  if (!job) notFound();
+  const cv = readCv(account, id);
+  const stale = { error: "The CV or job changed. Reload the page to compare the latest versions." };
+  if (cv?.version !== cvVersion || job.version !== jobVersion) return stale;
+  const config = comparisonConfig();
+  if (!config) return { error: "AI comparison is unavailable. You can still compare the CV manually." };
+  try {
+    const items = await requestComparison(config, job.description, cv.evidence);
+    if (readCv(account, id)?.version !== cvVersion || readTargetJob(account, id)?.version !== jobVersion) return stale;
+    return { items };
+  } catch {
+    return { error: "AI comparison could not be generated. Try again or compare the CV manually." };
+  }
+}
 
 export async function saveComparison(
   id: string,

@@ -8,15 +8,18 @@ type Report = { items: Requirement[]; score: number | null };
 
 const firstRequirement: Requirement = { id: 1, title: "", required: true, evidence: "", partial: false };
 
-export function CompareForm({ evidence, report, save }: {
+export function CompareForm({ evidence, report, save, suggest }: {
   evidence: CvEvidence[];
   report?: Report;
   save: (items: Requirement[]) => Promise<{ error?: string; report?: Report }>;
+  suggest?: () => Promise<{ error?: string; items?: Requirement[] }>;
 }) {
   const [items, setItems] = useState(report?.items ?? [firstRequirement]);
   const [result, setResult] = useState(report);
   const [error, setError] = useState("");
   const [pending, startTransition] = useTransition();
+  const [suggesting, startSuggestion] = useTransition();
+  const busy = pending || suggesting;
 
   function update(id: number, patch: Partial<Requirement>) {
     setItems(items.map((item) => item.id === id ? { ...item, ...patch } : item));
@@ -25,6 +28,26 @@ export function CompareForm({ evidence, report, save }: {
 
   return (
     <>
+      {suggest && (
+        <section className="fields" aria-label="AI comparison">
+          <p>Generate a draft from your job description and CV excerpts sent to OpenAI. Review the suggested requirements and evidence before saving.</p>
+          <button type="button" className="button" disabled={busy} onClick={() => {
+            setError("");
+            startSuggestion(async () => {
+              try {
+                const response = await suggest();
+                if (response.error) setError(response.error);
+                if (response.items) {
+                  setItems(response.items);
+                  setResult(undefined);
+                }
+              } catch {
+                setError("AI comparison could not be generated. Try again or compare the CV manually.");
+              }
+            });
+          }}>{suggesting ? "Generating draft…" : "Draft comparison with OpenAI"}</button>
+        </section>
+      )}
       <form className="fields" onSubmit={(event) => {
         event.preventDefault();
         setError("");
@@ -40,7 +63,7 @@ export function CompareForm({ evidence, report, save }: {
       }}>
         <p>Add requirements from the job description and choose supporting lines from your CV. This estimate reflects the evidence you select.</p>
         {items.map((item, index) => (
-          <fieldset className="fields" key={item.id} disabled={pending}>
+          <fieldset className="fields" key={item.id} disabled={busy}>
             <legend>Requirement {index + 1}</legend>
             <label>Requirement <input required pattern=".*\S.*" maxLength={300} value={item.title}
               onChange={(event) => update(item.id, { title: event.target.value })} /></label>
@@ -66,12 +89,12 @@ export function CompareForm({ evidence, report, save }: {
             }}>Remove requirement {index + 1}</button>}
           </fieldset>
         ))}
-        {items.length < 30 && <button type="button" className="text-button" disabled={pending} onClick={() => {
+        {items.length < 30 && <button type="button" className="text-button" disabled={busy} onClick={() => {
           setItems([...items, { ...firstRequirement, id: Math.max(...items.map(({ id }) => id)) + 1 }]);
           setResult(undefined);
         }}>Add requirement</button>}
         {error && <p role="alert">{error}</p>}
-        <button className="button" disabled={pending}>{pending ? "Saving comparison…" : "Compare CV"}</button>
+        <button className="button" disabled={busy}>{pending ? "Saving comparison…" : "Compare CV"}</button>
       </form>
       {result && (
         <section aria-label="Comparison result">
