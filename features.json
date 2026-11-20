@@ -7,7 +7,7 @@
       "Verify that the homepage loads and its explanation is visible without signing in.",
       "Verify that the explanation identifies the task the application helps users perform and the outcome users can expect."
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "create-candidate-profile",

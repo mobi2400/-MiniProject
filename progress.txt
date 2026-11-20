@@ -141,3 +141,16 @@ commands or commit references when they help someone reproduce the result.
 - Linked the design from technical notes and the CV/training workflow.
 - Runtime verification awaits implementation. Database, queue, provider,
   hosting, and retention choices remain open.
+
+2026-11-20 | Six implementation phases
+- Mapped all 38 acceptance journeys to six phases in docs/technical-notes.md.
+- Each phase has frontend, backend, AI and content work, and an exit check.
+- Next implementation feature is home-explains-application. Scaffold the
+  Next.js baseline and document its startup before browser verification.
+
+2026-11-20 | Phase 1 public homepage
+- Added the Next.js App Router baseline, first public page, build tooling,
+  and local startup commands. Completed home-explains-application.
+- npm lint, production build, and type check passed. A fresh browser tab
+  loaded / without signing in and the main link reached the workflow section.
+- Next Phase 1 slice is account sign-in and persistent candidate profiles.
