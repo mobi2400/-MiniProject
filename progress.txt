@@ -226,3 +226,12 @@ commands or commit references when they help someone reproduce the result.
   line. Lint, build, and TypeScript passed. Marked suggest-cv-improvements
   and correct-cv-evidence passing.
 - Next: implement role coverage using reviewed training items.
+
+2026-11-20 | Pilot role coverage
+- Added the private offer preview backed by the current saved comparison
+  and a five-item SQL joins bank. The preview names uncovered required skills
+  and shows proposed training and CV delivery terms for covered skills.
+- Browser testing covered a mixed comparison and a SQL-joins-only comparison.
+  Lint, production build, and TypeScript passed.
+- Question bank review, training execution, and checkout remain pending.
+  Next: use the bank in a persisted diagnostic attempt.
