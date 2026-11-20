@@ -294,3 +294,12 @@ commands or commit references when they help someone reproduce the result.
   Fixtures verified cross-board deduplication and recovery. Production
   build, lint, and types passed. Marked choose-job-search-titles passing.
 - Next: save listing snapshots and use them to create preparations.
+
+2026-11-20 | Listing-backed preparations
+- A candidate can import a Greenhouse posting into a private preparation.
+  The saved description is plain text. Source metadata and the original
+  link are stored with the snapshot. Repeat import opens the same record.
+- Browser verified a live posting import and duplicate prevention. Lint,
+  production build, and TypeScript passed.
+- select-listing-as-target-job stays pending until its CV comparison and
+  coverage journey is verified. Saved listing closure handling is pending.

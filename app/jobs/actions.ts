@@ -1,12 +1,34 @@
 "use server";
 
+import { createHash } from "node:crypto";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { db } from "../../lib/db";
+import { readListing } from "../../lib/job-listing";
 import { parseJobTitles } from "../../lib/job-search-titles";
 import { configuredBoards, searchBoard } from "../../lib/job-sources";
+import { createPreparation, readTargetJob } from "../../lib/preparations";
 import { requireAccount } from "../../lib/session";
 
 type SearchTitleState = { error?: string; titles?: string[] };
+
+export async function prepareForListing(boardId: string, listingId: string) {
+  const account = await requireAccount();
+  if (!db().prepare("SELECT 1 FROM profiles WHERE account_id = ?").get(account)) redirect("/profile");
+  const board = configuredBoards().find(({ id }) => id === boardId);
+  if (!board || !/^[1-9]\d{0,15}$/u.test(listingId)) return { error: "This listing is unavailable." };
+  const id = createHash("sha256").update(JSON.stringify([account, boardId, listingId])).digest("hex");
+  if (!readTargetJob(account, id)) {
+    try {
+      const listing = await readListing(board, listingId);
+      if (!listing) return { error: "This posting is no longer available or has no usable description." };
+      createPreparation(account, id, listing.title, listing.description, listing);
+    } catch {
+      return { error: "The posting could not be saved. Try again shortly." };
+    }
+  }
+  redirect(`/preparations/${id}/setup`);
+}
 
 export async function searchSavedJobs(source?: string) {
   const account = await requireAccount();

@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { mergeListings, type BoardResult } from "../../lib/job-sources";
-import { searchSavedJobs } from "./actions";
+import { prepareForListing, searchSavedJobs } from "./actions";
 
 export function SearchResults() {
   const [results, setResults] = useState<BoardResult[]>([]);
@@ -62,6 +62,12 @@ export function SearchResults() {
           <a href={job.url}>{job.title}</a>
           <p>{job.company} · {job.location}</p>
           <p>Sources: {job.sources.map(({ name }) => name).join(", ")}</p>
+          <form action={async () => {
+            const result = await prepareForListing(job.sources[0].id, job.listingId);
+            if (result?.error) setError(result.error);
+          }}>
+            <button type="submit" className="text-button" aria-label={`Prepare for ${job.title}`}>Prepare for this job</button>
+          </form>
         </li>)}</ul>
       </>}
     </section>

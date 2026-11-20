@@ -1,5 +1,5 @@
 export type Board = { id: string; name: string };
-export type Listing = { url: string; title: string; location: string; company: string };
+export type Listing = { listingId: string; url: string; title: string; location: string; company: string };
 export type BoardResult =
   | { board: Board; jobs: Listing[]; checkedAt: number }
   | { board: Board; error: string };
@@ -28,12 +28,12 @@ export async function searchBoard(board: Board, titles: string[], request = fetc
     }
     const jobs: Listing[] = [];
     for (const job of payload.jobs) {
-      if (typeof job?.title !== "string" || typeof job.absolute_url !== "string") continue;
+      if (!Number.isSafeInteger(job?.id) || job.id < 1 || typeof job.title !== "string" || typeof job.absolute_url !== "string") continue;
       if (!titles.some((title) => job.title.toLowerCase().includes(title.toLowerCase()))) continue;
       const url = URL.parse(job.absolute_url);
       if (!url || url.protocol !== "https:" || url.username || url.password) continue;
       url.hash = "";
-      jobs.push({ url: url.href, title: job.title.slice(0, 240), company: board.name,
+      jobs.push({ listingId: String(job.id), url: url.href, title: job.title.slice(0, 240), company: board.name,
         location: typeof job.location?.name === "string" ? job.location.name.slice(0, 240) : "Not specified" });
       if (jobs.length >= 100) break;
     }

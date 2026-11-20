@@ -84,6 +84,15 @@ export function db() {
       account_id TEXT PRIMARY KEY REFERENCES accounts(id) ON DELETE CASCADE,
       titles_json TEXT NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS listing_snapshots (
+      preparation_id TEXT PRIMARY KEY REFERENCES preparations(id) ON DELETE CASCADE,
+      source_id TEXT NOT NULL,
+      listing_id TEXT NOT NULL,
+      url TEXT NOT NULL,
+      company TEXT NOT NULL,
+      location TEXT NOT NULL,
+      captured_at INTEGER NOT NULL
+    );
   `);
   database = connection;
   return connection;

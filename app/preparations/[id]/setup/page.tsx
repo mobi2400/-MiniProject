@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { readCv } from "../../../../lib/cv";
-import { readTargetJob } from "../../../../lib/preparations";
+import { readListingSnapshot, readTargetJob } from "../../../../lib/preparations";
 import { requireAccount } from "../../../../lib/session";
 import { CvForm } from "./cv-form";
 import { EvidenceForm } from "./evidence-form";
@@ -12,10 +12,12 @@ export default async function PreparationSetup({ params }: { params: Promise<{ i
   const job = readTargetJob(accountId, id);
   if (!job) notFound();
   const cv = readCv(accountId, id);
+  const listing = readListingSnapshot(accountId, id);
   return (
     <main className="shell form-page">
       <Link href="/dashboard">Your preparations</Link>
       <h1>{job.title}</h1>
+      {listing && <p>{listing.company} · {listing.location} · <a href={listing.url}>Original posting</a></p>}
       <h2>Saved job description</h2>
       <p className="saved-description">{job.description}</p>
       <p><Link href={`/preparations/${id}/delete`}>Delete preparation</Link></p>
