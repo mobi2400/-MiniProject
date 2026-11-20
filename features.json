@@ -267,5 +267,122 @@
       "Submit the reviewed attempt, reload during grading, and verify a single submission appears with pending status and later links to the session feedback."
     ],
     "passes": false
+  },
+  {
+    "id": "choose-job-search-titles",
+    "description": "A candidate can set the job titles to search for, either by entering them or by accepting titles identified from their uploaded CV.",
+    "steps": [
+      "Sign in with a candidate profile that has an uploaded CV. Open job search and verify suggested titles derived from the CV's skills and experience are shown, each with the CV evidence it came from.",
+      "Remove one suggested title, edit another, and add a title manually. Save and reload, and verify the saved list matches the edits.",
+      "Sign in with a candidate who has no CV and verify that titles can still be entered manually and a search can run."
+    ],
+    "passes": false
+  },
+  {
+    "id": "aggregate-job-listings",
+    "description": "A candidate can see relevant listings gathered from multiple job sites in one place.",
+    "steps": [
+      "Run a search for a saved title with at least two enabled sources returning known fixture listings.",
+      "Verify results from every source appear together, and each listing shows title, company, location, source name, and a link to the original posting.",
+      "Verify a listing returned by two sources appears once, with both sources shown.",
+      "Filter by source and by location and verify the list updates without a full reload."
+    ],
+    "passes": false
+  },
+  {
+    "id": "tolerate-source-failure",
+    "description": "A search still works when some job sources fail, and the candidate can see what was and wasn't searched.",
+    "steps": [
+      "Run a search where one source times out, one rejects the request, and one succeeds.",
+      "Verify results from the successful source are shown and each failed source is named with a status and a retry action.",
+      "Retry the failed source after restoring it and verify its listings merge in without duplicating existing ones.",
+      "Verify previously fetched listings are labeled with when they were last updated."
+    ],
+    "passes": false
+  },
+  {
+    "id": "handle-stale-listings",
+    "description": "Listings that have been closed or removed at the source are not presented as open.",
+    "steps": [
+      "Save a listing, then simulate the source removing it.",
+      "Refresh and verify the listing is marked closed or unavailable, and that the saved tailored resume and notes for it remain accessible.",
+      "Verify closed listings are excluded from new search results by default."
+    ],
+    "passes": false
+  },
+  {
+    "id": "select-listing-as-target-job",
+    "description": "A candidate can pick a discovered listing as their target job and get the same preparation features as a pasted job description.",
+    "steps": [
+      "Open a listing from search results and choose it as a target job.",
+      "Verify its role title and requirements are available for CV comparison, as with a submitted job description.",
+      "Verify the CV-fit score, gaps, and role coverage preview run against that listing."
+    ],
+    "passes": false
+  },
+  {
+    "id": "analyze-ats-keywords",
+    "description": "A candidate can see which keywords a listing emphasizes and which of them their CV already covers.",
+    "steps": [
+      "Use a listing with known keywords and a CV that contains some of them.",
+      "Open keyword analysis and verify it lists the listing's keywords, marks each as present or missing in the CV, and cites where each present one appears.",
+      "Verify the result shows a keyword-coverage figure labeled as an estimate and not as a guaranteed ATS result."
+    ],
+    "passes": false
+  },
+  {
+    "id": "confirm-skills-before-adding",
+    "description": "A skill or keyword missing from the CV is added only after the candidate confirms they actually have it.",
+    "steps": [
+      "Open keyword analysis with one missing keyword the candidate has and one they don't.",
+      "Verify each missing keyword is shown with options such as 'I have this', 'learning', and 'I don't have this', and that nothing is added to any resume before the candidate chooses.",
+      "Confirm the first keyword with a supporting detail, mark the second as not having it, and generate the tailored resume. Verify the confirmed skill appears and the other does not.",
+      "Verify keywords marked 'I don't have this' or 'learning' are surfaced as gaps linked to practice, not inserted into the resume.",
+      "Reload and verify the confirmations persist and can be changed."
+    ],
+    "passes": false
+  },
+  {
+    "id": "generate-tailored-resume-microedits",
+    "description": "A candidate can get a version of their CV with small, evidence-backed edits for a specific listing.",
+    "steps": [
+      "From a selected listing with confirmed skills, request a tailored resume.",
+      "Verify the result shows each micro-edit as a diff beside the listing requirement or keyword it addresses and the CV or confirmed-skill fact that supports it.",
+      "Verify no edit introduces experience, employers, dates, or qualifications absent from the CV, profile, or confirmed skills.",
+      "Verify the original uploaded CV is unchanged and still accessible."
+    ],
+    "passes": false
+  },
+  {
+    "id": "approve-tailored-edits",
+    "description": "A candidate controls which micro-edits go into each tailored resume.",
+    "steps": [
+      "Open a tailored resume with three suggested edits.",
+      "Accept one, decline one, and manually reword one. Verify the preview updates and the keyword-coverage figure reflects the current selection.",
+      "Download the resume and verify it contains only the accepted and reworded changes.",
+      "Reload and verify the decisions are preserved."
+    ],
+    "passes": false
+  },
+  {
+    "id": "manage-resume-variants-per-listing",
+    "description": "A candidate can keep a separate tailored resume for each listing and know which one was used where.",
+    "steps": [
+      "Generate tailored resumes for two listings from different sources.",
+      "Open the saved variants list and verify each variant shows its listing, source, creation date, and keyword coverage.",
+      "Edit one variant and verify the other and the original CV are unchanged.",
+      "Download a variant in an ATS-safe plain format and verify the text is parseable, with standard section headings and no text in images or tables."
+    ],
+    "passes": false
+  },
+  {
+    "id": "protect-job-search-data",
+    "description": "A candidate's search criteria, saved listings, and tailored resumes are private and are removed on deletion.",
+    "steps": [
+      "Open another candidate's saved listings or resume variant by URL and verify access is denied.",
+      "Verify the CV text and personal details are not sent to any job source during search, only the job titles and filters.",
+      "Delete the preparation and verify its tailored resumes and confirmed-skill records are inaccessible, while a second preparation's remain."
+    ],
+    "passes": false
   }
 ]
