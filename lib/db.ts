@@ -67,6 +67,19 @@ export function db() {
       score INTEGER CHECK (score IN (0, 100)),
       PRIMARY KEY (preparation_id, job_version)
     );
+    CREATE TABLE IF NOT EXISTS reassessments (
+      preparation_id TEXT NOT NULL REFERENCES preparations(id) ON DELETE CASCADE,
+      job_version INTEGER NOT NULL,
+      sequence INTEGER NOT NULL,
+      question_id TEXT NOT NULL,
+      question_json TEXT NOT NULL,
+      selected_answer INTEGER,
+      score INTEGER CHECK (score IN (0, 100)),
+      PRIMARY KEY (preparation_id, job_version, sequence),
+      UNIQUE (preparation_id, job_version, question_id)
+    );
+    CREATE UNIQUE INDEX IF NOT EXISTS one_open_reassessment
+      ON reassessments(preparation_id, job_version) WHERE score IS NULL;
   `);
   database = connection;
   return connection;

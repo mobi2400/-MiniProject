@@ -243,3 +243,11 @@ commands or commit references when they help someone reproduce the result.
   Lint, production build, and TypeScript passed.
 - Next: add practice and fresh reassessment attempts. Readiness and
   general session acceptance criteria remain pending.
+
+2026-11-20 | SQL joins practice and reassessment
+- Added guided practice for the diagnostic gap and persisted, single-use
+  reassessment questions. Two consecutive passes show pilot readiness.
+- Browser verified practice retry, a failed attempt, two fresh passing
+  attempts, and readiness after reload. Lint, build, and TypeScript passed.
+- Practice is currently scoped to the first diagnostic gap. General
+  sessions, saved drafts, and readiness-backed CV delivery remain pending.

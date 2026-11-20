@@ -4,6 +4,7 @@ import { readTargetJob } from "../../../../lib/preparations";
 import { requireAccount } from "../../../../lib/session";
 import { readDiagnostic } from "../../../../lib/training";
 import { submitDiagnostic } from "./actions";
+import { JoinPractice } from "./practice";
 
 export default async function Diagnostic({ params, searchParams }: {
   params: Promise<{ id: string }>;
@@ -28,6 +29,8 @@ export default async function Diagnostic({ params, searchParams }: {
           <p>Correct answer: {question.options[question.answer]}</p>
           <p>{question.feedback}</p>
           <p>Use this result to identify what to practice. Readiness requires independent reassessment.</p>
+          {attempt.score === 0 && <JoinPractice />}
+          <Link className="button" href={`/preparations/${id}/reassessment`}>Go to reassessment</Link>
         </section>
       ) : (
         <form className="fields" action={submitDiagnostic.bind(null, id, job.version)}>
