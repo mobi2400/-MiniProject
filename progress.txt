@@ -320,3 +320,12 @@ commands or commit references when they help someone reproduce the result.
   term boundaries, punctuation, whitespace, and empty results. Lint,
   production build, and TypeScript passed. Marked analyze-ats-keywords passing.
 - Next: capture candidate-confirmed evidence for missing keywords.
+
+2026-11-20 | Candidate skill confirmations
+- Added listing-scoped confirmation, learning, and missing states.
+  Claiming a skill requires a supporting detail. Changing to a practice
+  gap clears the prior claim. Saves check current CV and job versions.
+- Browser verified persistence and editing after fixing SQLite row
+  serialization. Lint, production build, and TypeScript passed.
+- Next: wire confirmed facts into reviewable tailored CV variants.
+  confirm-skills-before-adding remains pending until generation is verified.

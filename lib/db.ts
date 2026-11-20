@@ -98,6 +98,16 @@ export function db() {
       status TEXT NOT NULL CHECK (status IN ('open', 'closed')),
       checked_at INTEGER NOT NULL
     );
+    CREATE TABLE IF NOT EXISTS keyword_confirmations (
+      preparation_id TEXT NOT NULL,
+      job_version INTEGER NOT NULL,
+      term TEXT NOT NULL,
+      status TEXT NOT NULL CHECK (status IN ('have', 'learning', 'missing')),
+      detail TEXT NOT NULL,
+      PRIMARY KEY (preparation_id, job_version, term),
+      FOREIGN KEY (preparation_id, job_version) REFERENCES target_job_versions(preparation_id, version) ON DELETE CASCADE,
+      CHECK ((status = 'have' AND length(trim(detail)) > 0) OR (status <> 'have' AND detail = ''))
+    );
   `);
   database = connection;
   return connection;
