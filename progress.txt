@@ -269,3 +269,11 @@ commands or commit references when they help someone reproduce the result.
   preservation of a sibling preparation. Lint, build, and TypeScript passed.
 - Browser confirmation submission and invalidation of old download links
   remain to be verified. Deletion acceptance stays open.
+
+2026-11-20 | Role-specific dashboard
+- Added role selection with separate CV-fit and SQL assessment scores,
+  readiness, session links, and the next action for the selected role.
+- Browser verified keyboard switching between ready and pending roles
+  and confirmed scores stayed scoped. Lint, build, and TypeScript passed.
+- Dashboard acceptance remains open for mobile layout, in-flight loading,
+  and failed export recovery.

@@ -45,6 +45,12 @@ h2 { font-size: clamp(1.65rem, 3vw, 2.25rem); letter-spacing: -.035em; }
 .fields select { width: 100%; padding: .65rem .75rem; border: 1px solid #77758c; border-radius: .45rem; font: inherit; }
 .fields .check-label { display: flex; align-items: baseline; }
 .fields .check-label input { width: auto; }
+.dashboard { max-width: 52rem; }
+.role-progress { margin-block: 1.5rem; padding: clamp(1rem, 4vw, 1.75rem); border: 1px solid var(--line); border-radius: .75rem; overflow-wrap: anywhere; }
+.dashboard-scores { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: 1rem; }
+.dashboard-scores div { padding: .85rem; background: #eeebfc; border-radius: .5rem; }
+.dashboard-scores dt { font-weight: 650; }
+.dashboard-scores dd { margin: 0; }
 .fields p { margin: 0; }
 .fields button, .text-button { justify-self: start; border: 0; font: inherit; cursor: pointer; }
 .fields button:disabled { opacity: .65; cursor: wait; }
