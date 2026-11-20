@@ -55,7 +55,7 @@
       "Request CV improvements and verify the feedback identifies what to change and which job requirement it addresses.",
       "Verify any suggested wording uses facts supported by the candidate's CV or profile."
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "assess-role-readiness",
@@ -127,7 +127,7 @@
       "Open a parsed CV where a project skill was attributed to employment. Inspect the source and correct the attribution.",
       "Rerun the analysis and verify the cited evidence and suggested edit refer to the corrected project entry. Reload and verify the correction persists."
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "view-role-progress",

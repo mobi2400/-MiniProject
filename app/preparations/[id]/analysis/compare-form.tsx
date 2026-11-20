@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import type { Requirement } from "../../../../lib/cv-fit";
 import type { CvEvidence } from "../../../../lib/cv-text";
+import { CvSuggestions } from "./cv-suggestions";
 
 type Report = { items: Requirement[]; score: number | null };
 
@@ -108,6 +109,7 @@ export function CompareForm({ evidence, report, save, suggest }: {
               </li>
             );
           })}</ul>
+          <CvSuggestions items={result.items} evidence={evidence} />
         </section>
       )}
     </>

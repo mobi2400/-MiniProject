@@ -218,3 +218,11 @@ commands or commit references when they help someone reproduce the result.
   verified original bytes and attribution. Lint, build, and types passed.
 - correct-cv-evidence remains pending until tailored edit suggestions use
   the corrected source. Next: generate and review grounded CV edits.
+
+2026-11-20 | CV improvement guidance
+- Added on-demand improvement guidance beside each saved comparison gap.
+  Guidance references candidate-selected evidence and keeps its source text.
+- Browser verified gap guidance and use of the previously corrected Projects
+  line. Lint, build, and TypeScript passed. Marked suggest-cv-improvements
+  and correct-cv-evidence passing.
+- Next: implement role coverage using reviewed training items.
