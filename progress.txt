@@ -209,3 +209,12 @@ commands or commit references when they help someone reproduce the result.
   the production build passed.
 - Live provider and browser verification of the AI path remain pending.
   Next: verify with a configured model using synthetic documents.
+
+2026-11-20 | Versioned CV evidence corrections
+- Added candidate section corrections on preparation setup. Corrections
+  create a CV version with unchanged source bytes and stable line numbers.
+- Browser verification moved an Experience line to Projects, reloaded,
+  and confirmed the new comparison cited Projects. SQLite assertions
+  verified original bytes and attribution. Lint, build, and types passed.
+- correct-cv-evidence remains pending until tailored edit suggestions use
+  the corrected source. Next: generate and review grounded CV edits.

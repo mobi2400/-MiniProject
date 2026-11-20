@@ -2,10 +2,27 @@
 
 import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
-import { saveCv } from "../../../../lib/cv";
-import { cvByteLimit, extractTextEvidence } from "../../../../lib/cv-text";
+import { readCv, saveCv, saveCvCorrection } from "../../../../lib/cv";
+import { cvByteLimit, extractTextEvidence, isCvSection } from "../../../../lib/cv-text";
 import { readTargetJob } from "../../../../lib/preparations";
 import { requireAccount } from "../../../../lib/session";
+
+export async function correctCvSection(preparationId: string, version: number, line: number, _: string, data: FormData) {
+  const accountId = await requireAccount();
+  if (!readTargetJob(accountId, preparationId)) notFound();
+  const cv = readCv(accountId, preparationId);
+  const stale = "The CV changed. Reload before correcting the evidence.";
+  if (cv?.version !== version) return stale;
+  const section = data.get("section");
+  const entry = cv.evidence.find((item) => item.line === line);
+  if (typeof section !== "string" || !isCvSection(section) || !entry) return "Choose a valid evidence section.";
+  if (entry.section === section) return "This line already belongs to that section.";
+  const evidence = cv.evidence.map((item) => item.line === line ? { ...item, section } : item);
+  if (!saveCvCorrection(accountId, preparationId, version, evidence)) return stale;
+  revalidatePath(`/preparations/${preparationId}/setup`);
+  revalidatePath(`/preparations/${preparationId}/analysis`);
+  return "";
+}
 
 export async function uploadCv(preparationId: string, _: string, data: FormData) {
   const accountId = await requireAccount();

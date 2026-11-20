@@ -11,6 +11,12 @@ const sectionNames = {
   certifications: "Certifications",
 } as const;
 
+export const cvSections = [...new Set(Object.values(sectionNames))];
+
+export function isCvSection(value: string): boolean {
+  return cvSections.some((section) => section === value);
+}
+
 export type CvEvidence = { section: string; excerpt: string; line: number };
 
 export function extractTextEvidence(bytes: Uint8Array): CvEvidence[] {

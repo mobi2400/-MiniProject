@@ -77,7 +77,7 @@ export function CompareForm({ evidence, report, save, suggest }: {
               <option value="">No supporting evidence</option>
               {evidence.map((entry) => (
                 <option key={entry.line} value={entry.line}>
-                  Line {entry.line} · {entry.excerpt.slice(0, 140)}
+                  {entry.section} · Line {entry.line} · {entry.excerpt.slice(0, 140)}
                 </option>
               ))}
             </select></label>
@@ -104,7 +104,7 @@ export function CompareForm({ evidence, report, save, suggest }: {
             return (
               <li key={item.id}>
                 <strong>{item.title}</strong> · {item.required ? "Required" : "Preferred"}
-                {source ? <p>{item.partial ? "Partial match" : "Match"} · Line {source.line}: {source.excerpt}</p> : <p>Gap in the CV · No supporting evidence selected.</p>}
+                {source ? <p>{item.partial ? "Partial match" : "Match"} · {source.section} · Line {source.line}: {source.excerpt}</p> : <p>Gap in the CV · No supporting evidence selected.</p>}
               </li>
             );
           })}</ul>

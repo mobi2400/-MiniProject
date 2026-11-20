@@ -4,6 +4,7 @@ import { readCv } from "../../../../lib/cv";
 import { readTargetJob } from "../../../../lib/preparations";
 import { requireAccount } from "../../../../lib/session";
 import { CvForm } from "./cv-form";
+import { EvidenceForm } from "./evidence-form";
 
 export default async function PreparationSetup({ params }: { params: Promise<{ id: string }> }) {
   const accountId = await requireAccount();
@@ -24,7 +25,11 @@ export default async function PreparationSetup({ params }: { params: Promise<{ i
           <Link className="button" href={`/preparations/${id}/analysis`}>Compare CV with this job</Link>
           <p role="status">Saved {cv.filename}, version {cv.version}.</p>
           <ul>{cv.evidence.map(({ section, excerpt, line }) => (
-            <li key={line}><strong>{section}</strong> · Line {line}<p className="saved-description">{excerpt}</p></li>
+            <li key={line}>
+              <strong>{section}</strong> · Line {line}
+              <p className="saved-description">{excerpt}</p>
+              <EvidenceForm key={cv.version} preparationId={id} version={cv.version} line={line} section={section} />
+            </li>
           ))}</ul>
         </section>
       )}

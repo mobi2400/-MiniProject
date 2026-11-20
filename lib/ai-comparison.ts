@@ -16,7 +16,7 @@ export async function requestComparison(
   const excerpts = evidence
     .filter(({ excerpt }) => !/\S+@\S+\.\S+|(?:\+?\d[\s().-]*){8,}/u.test(excerpt))
     .slice(0, 100)
-    .map(({ line, excerpt }) => ({ line, excerpt: excerpt.slice(0, 500) }));
+    .map(({ line, section, excerpt }) => ({ line, section, excerpt: excerpt.slice(0, 500) }));
 
   const response = await request("https://api.openai.com/v1/responses", {
     method: "POST",
