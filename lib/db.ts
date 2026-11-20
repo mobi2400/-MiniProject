@@ -58,6 +58,15 @@ export function db() {
       FOREIGN KEY (preparation_id, cv_version) REFERENCES cv_versions(preparation_id, version) ON DELETE CASCADE,
       FOREIGN KEY (preparation_id, job_version) REFERENCES target_job_versions(preparation_id, version) ON DELETE CASCADE
     );
+    CREATE TABLE IF NOT EXISTS diagnostic_attempts (
+      preparation_id TEXT NOT NULL REFERENCES preparations(id) ON DELETE CASCADE,
+      job_version INTEGER NOT NULL,
+      question_json TEXT NOT NULL,
+      submitted_at INTEGER,
+      selected_answer INTEGER,
+      score INTEGER CHECK (score IN (0, 100)),
+      PRIMARY KEY (preparation_id, job_version)
+    );
   `);
   database = connection;
   return connection;

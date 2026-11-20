@@ -1,24 +1,18 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { readCv } from "../../../../lib/cv";
-import type { Requirement } from "../../../../lib/cv-fit";
-import { db } from "../../../../lib/db";
 import { readTargetJob } from "../../../../lib/preparations";
 import { requireAccount } from "../../../../lib/session";
+import { readDiagnostic, readTrainingRequirements } from "../../../../lib/training";
 import { hasCoverage, qualifyingAttempts, readinessThreshold } from "../../../../lib/training-bank";
+import { startDiagnostic } from "../diagnostic/actions";
 
 export default async function Offer({ params }: { params: Promise<{ id: string }> }) {
   const account = await requireAccount();
   const { id } = await params;
   const job = readTargetJob(account, id);
   if (!job) notFound();
-  const cv = readCv(account, id);
-  const comparison = cv && db().prepare(`
-    SELECT c.items_json FROM cv_comparisons c JOIN preparations p ON p.id = c.preparation_id
-    WHERE p.account_id = ? AND p.id = ? AND c.cv_version = ? AND c.job_version = ?
-  `).get(account, id, cv.version, job.version) as { items_json: string } | undefined;
-  const items = comparison ? JSON.parse(comparison.items_json) as Requirement[] : [];
-  const required = items.filter((item) => item.required);
+  const required = readTrainingRequirements(account, id, job.version);
+  const diagnostic = readDiagnostic(account, id, job.version);
   const unsupported = required.some(({ title }) => !hasCoverage(title));
   return (
     <main className="shell form-page">
@@ -36,6 +30,13 @@ export default async function Offer({ params }: { params: Promise<{ id: string }
               <p>The pilot plan includes a diagnostic, guided practice, and independent reassessments for the skills above.</p>
               <p>The revised CV becomes available after {qualifyingAttempts} consecutive independent reassessments achieve at least {readinessThreshold}% overall and in each required skill.</p>
               <p>This preview is free. Paid checkout is pending.</p>
+              {diagnostic ? (
+                <Link href={`/preparations/${id}/diagnostic`}>{diagnostic.submittedAt ? "View diagnostic feedback" : "Resume diagnostic"}</Link>
+              ) : (
+                <form className="fields" action={startDiagnostic.bind(null, id)}>
+                  <button className="button">Start free diagnostic</button>
+                </form>
+              )}
             </section>
           )}
         </>

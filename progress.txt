@@ -235,3 +235,11 @@ commands or commit references when they help someone reproduce the result.
   Lint, production build, and TypeScript passed.
 - Question bank review, training execution, and checkout remain pending.
   Next: use the bank in a persisted diagnostic attempt.
+
+2026-11-20 | First scored diagnostic
+- Added an account-scoped SQL joins diagnostic with a frozen question,
+  server-side scoring, immutable submission, and saved feedback.
+- Browser testing verified a failed answer, score, explanation, and reload.
+  Lint, production build, and TypeScript passed.
+- Next: add practice and fresh reassessment attempts. Readiness and
+  general session acceptance criteria remain pending.
