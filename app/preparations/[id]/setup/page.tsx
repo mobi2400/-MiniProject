@@ -21,6 +21,7 @@ export default async function PreparationSetup({ params }: { params: Promise<{ i
       <CvForm preparationId={id} />
       {cv && (
         <section aria-label="Extracted CV evidence">
+          <Link className="button" href={`/preparations/${id}/analysis`}>Compare CV with this job</Link>
           <p role="status">Saved {cv.filename}, version {cv.version}.</p>
           <ul>{cv.evidence.map(({ section, excerpt, line }) => (
             <li key={line}><strong>{section}</strong> · Line {line}<p className="saved-description">{excerpt}</p></li>

@@ -35,7 +35,7 @@
       "Sign in with a candidate profile and submit a job description with a known role title and requirement.",
       "Verify the submitted role and requirement are available for comparison with the candidate's CV."
     ],
-    "passes": false
+    "passes": true
   },
   {
     "id": "score-cv-fit",
