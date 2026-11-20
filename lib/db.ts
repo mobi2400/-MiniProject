@@ -48,6 +48,16 @@ export function db() {
       evidence_json TEXT NOT NULL,
       UNIQUE (preparation_id, version)
     );
+    CREATE TABLE IF NOT EXISTS cv_comparisons (
+      preparation_id TEXT NOT NULL,
+      cv_version INTEGER NOT NULL,
+      job_version INTEGER NOT NULL,
+      items_json TEXT NOT NULL,
+      score INTEGER NOT NULL CHECK (score BETWEEN 0 AND 100),
+      PRIMARY KEY (preparation_id, cv_version, job_version),
+      FOREIGN KEY (preparation_id, cv_version) REFERENCES cv_versions(preparation_id, version) ON DELETE CASCADE,
+      FOREIGN KEY (preparation_id, job_version) REFERENCES target_job_versions(preparation_id, version) ON DELETE CASCADE
+    );
   `);
   database = connection;
   return connection;

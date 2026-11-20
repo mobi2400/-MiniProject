@@ -192,3 +192,11 @@ commands or commit references when they help someone reproduce the result.
   one match and one gap. Scoring assertions, lint, build, and type check passed.
 - Marked submit-target-job as passing. The comparison is currently manual
   and transient. AI matching and persisted reports remain pending.
+
+2026-11-20 | Persisted CV comparison
+- Added server validation, scoring and version-scoped comparison storage.
+  A newer CV prevents an open older report from overwriting the current one.
+- Browser verification covered saving and reloading a scored report, then
+  uploading a replacement CV and rejecting a stale save from another tab.
+- Validation assertions, lint, production build and TypeScript passed.
+  AI matching remains pending. Next: wire automatic matching to saved reports.
