@@ -338,3 +338,16 @@ commands or commit references when they help someone reproduce the result.
   original CV bytes. Lint, build, and TypeScript passed.
 - Marked generate-tailored-resume-microedits passing. Approvals, wording
   changes, and readiness-gated tailored downloads remain pending.
+
+2026-11-21 | Migration from SQLite to Neon Postgres
+- Replaced local SQLite (node:sqlite) with PostgreSQL using node-postgres (pg).
+- Created migrations/0001_init.sql with complete 14-table schema, foreign keys, BIGINT timestamp storage, BYTEA CV source storage, and partial unique index one_open_reassessment.
+- Created idempotent migration runner scripts/migrate.mjs and package.json script db:migrate.
+- Added docker-compose.yml for local PostgreSQL 16 service and documented configuration in docs/database.md.
+- Rewrote lib/db.ts to manage a lazily-initialized connection pool with SSL handling, int8 parsing as Number, and helpers one(), many(), run(), and tx().
+- Converted all database access across lib/ (cv.ts, cv-revision.ts, preparations.ts, training.ts, keyword-confirmations.ts, tailored-cv.ts, session.ts) to async Postgres queries with parameterized values ($1, $2, ...).
+- Replaced BEGIN IMMEDIATE transactions with tx() and row-level locks (SELECT FOR UPDATE) for createPreparation and startReassessment.
+- Converted all calling Server Actions, route handlers, and React Server Components in app/ to await asynchronous lib functions and use one/many/run.
+- Added comprehensive integration test suite (tests/database.test.ts, tests/helpers/db.ts, tsconfig.test.json) covering 12 critical behavioral and concurrency guarantees.
+- Removed DATABASE_PATH and configured .env.example, .gitignore, and docs/database.md for Neon pooled/unpooled connection strings and Vercel deployments.
+- Verified TypeScript compilation (npm run typecheck), linting (npm run lint), and production build (npm run build) all passing cleanly.
