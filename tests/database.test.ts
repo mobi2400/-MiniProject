@@ -4,11 +4,10 @@ import { resetDatabase } from "./helpers/db";
 import { db, one, many, run, tx } from "../lib/db";
 import { createPreparation, readTargetJob, readListingSnapshot, deletePreparation } from "../lib/preparations";
 import { saveCv, readCv, saveCvCorrection } from "../lib/cv";
-import { readCvSource, readCvRevision } from "../lib/cv-revision";
+import { readCvSource } from "../lib/cv-revision";
 import { saveKeywordConfirmation, readKeywordConfirmations } from "../lib/keyword-confirmations";
 import { saveTailoredDraft, readTailoredDraft } from "../lib/tailored-cv";
 import { hasReadiness, readReassessments } from "../lib/training";
-import { requireAccount, startSession } from "../lib/session";
 
 describe("Database Integration Tests", () => {
   beforeEach(async () => {
