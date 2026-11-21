@@ -2,6 +2,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { Client } from "pg";
 
+
+const projectRoot = path.join(__dirname, "..", "..", "..");
+const migrationsDir = path.join(projectRoot, "migrations");
+
 export function getTestDatabaseUrl(): string {
   const url = process.env.TEST_DATABASE_URL || process.env.DATABASE_URL;
   if (!url) {
@@ -33,7 +37,9 @@ export async function resetDatabase() {
   await client.connect();
   try {
     await client.query("DROP SCHEMA public CASCADE; CREATE SCHEMA public;");
-    const migrationFile = path.resolve(__dirname, "../../migrations/0001_init.sql");
+    // const migrationFile = path.resolve(__dirname, "../../migrations/0001_init.sql");
+    // const sql = fs.readFileSync(migrationFile, "utf-8");
+    const migrationFile = path.join(migrationsDir, "0001_init.sql");
     const sql = fs.readFileSync(migrationFile, "utf-8");
     await client.query(sql);
   } finally {
