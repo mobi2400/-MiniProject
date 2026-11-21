@@ -9,4 +9,5 @@ next-env.d.ts
 *.sqlite
 .test-build/
 /MiniProject.zip
+.vercel
 
