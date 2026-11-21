@@ -3,7 +3,7 @@
 import { randomBytes, randomUUID, scrypt, timingSafeEqual } from "node:crypto";
 import { promisify } from "node:util";
 import { redirect } from "next/navigation";
-import { db } from "../../lib/db";
+import { one, run } from "../../lib/db";
 import { endSession, sessionKey, startSession } from "../../lib/session";
 
 const derive = promisify(scrypt);
@@ -25,12 +25,17 @@ export async function authenticate(_: string, formData: FormData): Promise<strin
     const salt = randomBytes(16).toString("hex");
     const hash = (await derive(password, salt, 64)) as Buffer;
     accountId = randomUUID();
-    const result = db().prepare("INSERT INTO accounts VALUES (?, ?, ?) ON CONFLICT(email) DO NOTHING")
-      .run(accountId, email, `${salt}:${hash.toString("hex")}`);
-    if (!result.changes) return "Could not create this account. If you already registered, try signing in.";
+    const result = await run("INSERT INTO accounts VALUES ($1, $2, $3) ON CONFLICT(email) DO NOTHING", [
+      accountId,
+      email,
+      `${salt}:${hash.toString("hex")}`,
+    ]);
+    if (!result) return "Could not create this account. If you already registered, try signing in.";
   } else {
-    const account = db().prepare("SELECT id, password_hash FROM accounts WHERE email = ?")
-      .get(email) as { id: string; password_hash: string } | undefined;
+    const account = await one<{ id: string; password_hash: string }>(
+      "SELECT id, password_hash FROM accounts WHERE email = $1",
+      [email],
+    );
     const [salt, hash] = account?.password_hash.split(":") ?? ["missing-account", "00".repeat(64)];
     const candidate = (await derive(password, salt, 64)) as Buffer;
     if (!timingSafeEqual(candidate, Buffer.from(hash, "hex")) || !account) return "Email or password is incorrect.";

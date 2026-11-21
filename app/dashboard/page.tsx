@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { readCv } from "../../lib/cv";
-import { db } from "../../lib/db";
+import { many, one } from "../../lib/db";
 import { requireAccount } from "../../lib/session";
 import { hasReadiness, readDiagnostic, readReassessments, readTrainingRequirements } from "../../lib/training";
 import { hasCoverage } from "../../lib/training-bank";
@@ -8,30 +8,38 @@ import { signOut } from "../account/actions";
 
 export default async function Dashboard({ searchParams }: { searchParams: Promise<{ role?: string }> }) {
   const accountId = await requireAccount();
-  const profile = db().prepare("SELECT 1 FROM profiles WHERE account_id = ?").get(accountId);
-  const preparations = db().prepare(`
+  const profile = await one("SELECT 1 FROM profiles WHERE account_id = $1", [accountId]);
+  const preparations = await many<{ id: string; title: string; version: number }>(
+    `
     SELECT p.id, j.title, j.version
     FROM preparations p JOIN target_job_versions j ON j.preparation_id = p.id
-    WHERE p.account_id = ? AND j.version = (
+    WHERE p.account_id = $1 AND j.version = (
       SELECT MAX(version) FROM target_job_versions WHERE preparation_id = p.id
     )
     ORDER BY p.created_at DESC, p.id
-  `).all(accountId) as { id: string; title: string; version: number }[];
+    `,
+    [accountId],
+  );
   const selectedId = (await searchParams).role;
   const role = preparations.find(({ id }) => id === selectedId) ?? preparations[0];
 
-  function renderProgress() {
+  async function renderProgress() {
     if (!role) return null;
     const base = `/preparations/${role.id}`;
-    const cv = readCv(accountId, role.id);
-    const comparison = cv && db().prepare(`
-      SELECT score FROM cv_comparisons WHERE preparation_id = ? AND cv_version = ? AND job_version = ?
-    `).get(role.id, cv.version, role.version) as { score: number } | undefined;
-    const diagnostic = readDiagnostic(accountId, role.id, role.version);
-    const attempts = readReassessments(accountId, role.id, role.version);
+    const cv = await readCv(accountId, role.id);
+    const comparison =
+      cv &&
+      (await one<{ score: number }>(
+        `
+      SELECT score FROM cv_comparisons WHERE preparation_id = $1 AND cv_version = $2 AND job_version = $3
+      `,
+        [role.id, cv.version, role.version],
+      ));
+    const diagnostic = await readDiagnostic(accountId, role.id, role.version);
+    const attempts = await readReassessments(accountId, role.id, role.version);
     const latest = attempts.at(-1);
     const scored = attempts.findLast(({ score }) => score !== null);
-    const required = readTrainingRequirements(accountId, role.id, role.version);
+    const required = await readTrainingRequirements(accountId, role.id, role.version);
     const covered = required.length > 0 && required.every(({ title }) => hasCoverage(title));
     const ready = covered && hasReadiness(attempts);
     let action = { label: "Upload your CV", path: "setup" };
@@ -75,7 +83,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
           ))}</ul>
         </nav>
       ) : <p>Your saved jobs will appear here.</p>}
-      {renderProgress()}
+      {await renderProgress()}
       <form action={signOut}><button className="text-button">Sign out</button></form>
     </main>
   );

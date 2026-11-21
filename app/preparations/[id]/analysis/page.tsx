@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { readCv } from "../../../../lib/cv";
 import { comparisonConfig } from "../../../../lib/ai-comparison";
 import type { Requirement } from "../../../../lib/cv-fit";
-import { db } from "../../../../lib/db";
+import { one } from "../../../../lib/db";
 import { readListingSnapshot, readTargetJob } from "../../../../lib/preparations";
 import { requireAccount } from "../../../../lib/session";
 import { CompareForm } from "./compare-form";
@@ -13,15 +13,20 @@ import { KeywordCoverage } from "./keyword-coverage";
 export default async function Analysis({ params }: { params: Promise<{ id: string }> }) {
   const account = await requireAccount();
   const { id } = await params;
-  const job = readTargetJob(account, id);
+  const job = await readTargetJob(account, id);
   if (!job) notFound();
-  const cv = readCv(account, id);
-  const listing = readListingSnapshot(account, id);
-  const stored = cv && db().prepare(`
+  const cv = await readCv(account, id);
+  const listing = await readListingSnapshot(account, id);
+  const stored =
+    cv &&
+    (await one<{ items_json: string; score: number }>(
+      `
     SELECT c.items_json, c.score FROM cv_comparisons c
     JOIN preparations p ON p.id = c.preparation_id
-    WHERE p.account_id = ? AND p.id = ? AND c.cv_version = ? AND c.job_version = ?
-  `).get(account, id, cv.version, job.version) as { items_json: string; score: number } | undefined;
+    WHERE p.account_id = $1 AND p.id = $2 AND c.cv_version = $3 AND c.job_version = $4
+    `,
+      [account, id, cv.version, job.version],
+    ));
   const report = stored && { items: JSON.parse(stored.items_json) as Requirement[], score: stored.score };
   return (
     <main className="shell form-page">

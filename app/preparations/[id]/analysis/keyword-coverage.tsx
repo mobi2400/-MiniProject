@@ -4,11 +4,12 @@ import type { CvEvidence } from "../../../../lib/cv-text";
 import { readKeywordConfirmations } from "../../../../lib/keyword-confirmations";
 import { KeywordForm } from "./keyword-form";
 
-export function KeywordCoverage({ account, id, jobVersion, cvVersion, description, evidence }: {
+export async function KeywordCoverage({ account, id, jobVersion, cvVersion, description, evidence }: {
   account: string; id: string; jobVersion: number; cvVersion: number; description: string; evidence: CvEvidence[];
 }) {
   const { keywords, covered, estimate } = analyzeKeywords(description, evidence);
-  const confirmations = new Map(readKeywordConfirmations(account, id, jobVersion).map((entry) => [entry.term, entry]));
+  const confirmationList = await readKeywordConfirmations(account, id, jobVersion);
+  const confirmations = new Map(confirmationList.map((entry) => [entry.term, entry]));
   return (
     <section aria-labelledby="keyword-heading" className="role-progress">
       <h2 id="keyword-heading">ATS keyword coverage</h2>

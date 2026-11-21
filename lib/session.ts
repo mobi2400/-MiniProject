@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { db } from "./db";
+import { one, run } from "./db";
 
 const cookieName = "miniproject_session";
 const issuer = "miniproject";
@@ -14,7 +14,7 @@ export function sessionKey() {
   return new TextEncoder().encode(key);
 }
 
-export async function startSession(accountId: string, key: Uint8Array) {
+export async function startSession(accountId: string, key: Uint8Array): Promise<void> {
   const id = randomUUID();
   const now = Math.floor(Date.now() / 1000);
   const expiresAt = now + duration;
@@ -27,8 +27,8 @@ export async function startSession(accountId: string, key: Uint8Array) {
     .setExpirationTime(expiresAt)
     .sign(key);
 
-  db().prepare("DELETE FROM sessions WHERE expires_at <= ?").run(now);
-  db().prepare("INSERT INTO sessions VALUES (?, ?, ?)").run(id, accountId, expiresAt);
+  await run("DELETE FROM sessions WHERE expires_at <= $1", [now]);
+  await run("INSERT INTO sessions VALUES ($1, $2, $3)", [id, accountId, expiresAt]);
   (await cookies()).set(cookieName, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -38,7 +38,7 @@ export async function startSession(accountId: string, key: Uint8Array) {
   });
 }
 
-async function readSession() {
+export async function readSession(): Promise<{ accountId: string; id: string } | null> {
   const key = sessionKey();
   const token = (await cookies()).get(cookieName)?.value;
   if (!key || !token) return null;
@@ -51,17 +51,22 @@ async function readSession() {
   }
 }
 
-export async function requireAccount() {
+export async function requireAccount(): Promise<string> {
   const session = await readSession();
-  const active = session && db().prepare(
-    "SELECT 1 FROM sessions WHERE id = ? AND account_id = ? AND expires_at > ?",
-  ).get(session.id, session.accountId, Math.floor(Date.now() / 1000));
+  const active =
+    session &&
+    (await one<{ "?column?": number } | { [key: string]: unknown }>(
+      "SELECT 1 FROM sessions WHERE id = $1 AND account_id = $2 AND expires_at > $3",
+      [session.id, session.accountId, Math.floor(Date.now() / 1000)],
+    ));
   if (!session || !active) redirect("/account");
   return session.accountId;
 }
 
-export async function endSession() {
+export async function endSession(): Promise<void> {
   const session = await readSession();
-  if (session) db().prepare("DELETE FROM sessions WHERE id = ? AND account_id = ?").run(session.id, session.accountId);
+  if (session) {
+    await run("DELETE FROM sessions WHERE id = $1 AND account_id = $2", [session.id, session.accountId]);
+  }
   (await cookies()).delete(cookieName);
 }

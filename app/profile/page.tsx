@@ -1,13 +1,15 @@
 import Link from "next/link";
-import { db } from "../../lib/db";
+import { one } from "../../lib/db";
 import { requireAccount } from "../../lib/session";
 import { signOut } from "../account/actions";
 import { ProfileForm } from "./profile-form";
 
 export default async function Profile() {
   const accountId = await requireAccount();
-  const profile = db().prepare("SELECT name, career_goal FROM profiles WHERE account_id = ?")
-    .get(accountId) as { name: string; career_goal: string } | undefined;
+  const profile = await one<{ name: string; career_goal: string }>(
+    "SELECT name, career_goal FROM profiles WHERE account_id = $1",
+    [accountId],
+  );
 
   return (
     <main className="shell form-page">

@@ -14,12 +14,13 @@ export default async function TailoredCv({ params, searchParams }: {
   const account = await requireAccount();
   const { id } = await params;
   const base = `/preparations/${id}`;
-  const job = readTargetJob(account, id);
-  const listing = readListingSnapshot(account, id);
+  const job = await readTargetJob(account, id);
+  const listing = await readListingSnapshot(account, id);
   if (!job || !listing) notFound();
-  const cv = readCv(account, id);
-  const draft = readTailoredDraft(account, id);
-  const currentEdits = cv && buildTailoredEdits(job.description, cv.evidence, readKeywordConfirmations(account, id, job.version));
+  const cv = await readCv(account, id);
+  const draft = await readTailoredDraft(account, id);
+  const confirmations = await readKeywordConfirmations(account, id, job.version);
+  const currentEdits = cv && buildTailoredEdits(job.description, cv.evidence, confirmations);
   const current = draft && draft.cvVersion === cv?.version && draft.jobVersion === job.version &&
     JSON.stringify(draft.edits) === JSON.stringify(currentEdits);
   const failed = (await searchParams).changed === "1";

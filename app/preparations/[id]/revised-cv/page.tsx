@@ -7,9 +7,9 @@ import { requireAccount } from "../../../../lib/session";
 export default async function RevisedCv({ params }: { params: Promise<{ id: string }> }) {
   const account = await requireAccount();
   const { id } = await params;
-  const job = readTargetJob(account, id);
+  const job = await readTargetJob(account, id);
   if (!job) notFound();
-  const revision = readCvRevision(account, id);
+  const revision = await readCvRevision(account, id);
   return (
     <main className="shell form-page">
       <Link href={`/preparations/${id}/reassessment`}>Back to readiness</Link>

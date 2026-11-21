@@ -1,13 +1,14 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { db } from "../../../lib/db";
+import { one } from "../../../lib/db";
 import { createPreparation } from "../../../lib/preparations";
 import { requireAccount } from "../../../lib/session";
 
 export async function submitTargetJob(id: string, _: string, data: FormData) {
   const accountId = await requireAccount();
-  if (!db().prepare("SELECT 1 FROM profiles WHERE account_id = ?").get(accountId)) redirect("/profile");
+  const profile = await one("SELECT 1 FROM profiles WHERE account_id = $1", [accountId]);
+  if (!profile) redirect("/profile");
   const rawTitle = data.get("title");
   const rawDescription = data.get("description");
   const title = typeof rawTitle === "string" ? rawTitle.trim() : "";
@@ -16,7 +17,7 @@ export async function submitTargetJob(id: string, _: string, data: FormData) {
     return "Enter a role title and job description within the listed limits.";
   }
   try {
-    createPreparation(accountId, id, title, description);
+    await createPreparation(accountId, id, title, description);
   } catch {
     return "The target job could not be saved. Try again.";
   }

@@ -9,10 +9,11 @@ import { startReassessment, submitReassessment } from "./actions";
 export default async function Reassessment({ params }: { params: Promise<{ id: string }> }) {
   const account = await requireAccount();
   const { id } = await params;
-  const job = readTargetJob(account, id);
+  const job = await readTargetJob(account, id);
   if (!job) notFound();
-  if (!readDiagnostic(account, id, job.version)?.submittedAt) redirect(`/preparations/${id}/offer`);
-  const attempts = readReassessments(account, id, job.version);
+  const diag = await readDiagnostic(account, id, job.version);
+  if (!diag?.submittedAt) redirect(`/preparations/${id}/offer`);
+  const attempts = await readReassessments(account, id, job.version);
   const latest = attempts.at(-1);
   const ready = hasReadiness(attempts);
   return (

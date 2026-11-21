@@ -10,10 +10,10 @@ import { ListingStatus } from "./listing-status";
 export default async function PreparationSetup({ params }: { params: Promise<{ id: string }> }) {
   const accountId = await requireAccount();
   const { id } = await params;
-  const job = readTargetJob(accountId, id);
+  const job = await readTargetJob(accountId, id);
   if (!job) notFound();
-  const cv = readCv(accountId, id);
-  const listing = readListingSnapshot(accountId, id);
+  const cv = await readCv(accountId, id);
+  const listing = await readListingSnapshot(accountId, id);
   return (
     <main className="shell form-page">
       <Link href="/dashboard">Your preparations</Link>

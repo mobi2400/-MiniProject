@@ -8,12 +8,12 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   const number = query.get("version");
   const version = Number(number);
   if (!Number.isSafeInteger(version) || version < 1) return new Response(null, { status: 404 });
-  const original = readCvSource(account, id, version);
+  const original = await readCvSource(account, id, version);
   if (!original) return new Response(null, { status: 404 });
   let content: BodyInit = new Uint8Array(original.source);
   const revised = query.get("mode") === "revised";
   if (revised) {
-    const revision = readCvRevision(account, id);
+    const revision = await readCvRevision(account, id);
     if (!revision || revision.cv.version !== version) return new Response(null, { status: 404 });
     const lines = new Set(query.getAll("line"));
     const selected = revision.edits.filter(({ line }) => lines.has(String(line)));
