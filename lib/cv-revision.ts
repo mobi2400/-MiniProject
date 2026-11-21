@@ -1,18 +1,24 @@
 import { readCv } from "./cv";
 import type { Requirement } from "./cv-fit";
-import { db } from "./db";
+import { one } from "./db";
 import { readTargetJob } from "./preparations";
 import { hasReadiness, readReassessments } from "./training";
 import { hasCoverage } from "./training-bank";
 
-export function readCvRevision(account: string, id: string) {
-  const job = readTargetJob(account, id);
-  const cv = readCv(account, id);
-  if (!job || !cv || !hasReadiness(readReassessments(account, id, job.version))) return null;
-  const report = db().prepare(`
+export async function readCvRevision(account: string, id: string) {
+  const job = await readTargetJob(account, id);
+  const cv = await readCv(account, id);
+  if (!job || !cv) return null;
+  const reassessments = await readReassessments(account, id, job.version);
+  if (!hasReadiness(reassessments)) return null;
+
+  const report = await one<{ items_json: string }>(
+    `
     SELECT items_json FROM cv_comparisons c JOIN preparations p ON p.id = c.preparation_id
-    WHERE p.account_id = ? AND p.id = ? AND c.cv_version = ? AND c.job_version = ?
-  `).get(account, id, cv.version, job.version) as { items_json: string } | undefined;
+    WHERE p.account_id = $1 AND p.id = $2 AND c.cv_version = $3 AND c.job_version = $4
+    `,
+    [account, id, cv.version, job.version],
+  );
   if (!report) return null;
   const requirements = JSON.parse(report.items_json) as Requirement[];
   const required = requirements.filter((item) => item.required);
@@ -24,11 +30,14 @@ export function readCvRevision(account: string, id: string) {
   return { job, cv, edits };
 }
 
-export function readCvSource(account: string, id: string, version: number) {
-  return db().prepare(`
+export async function readCvSource(account: string, id: string, version: number) {
+  return await one<{ source: Uint8Array | Buffer }>(
+    `
     SELECT c.source FROM cv_versions c JOIN preparations p ON p.id = c.preparation_id
-    WHERE p.account_id = ? AND p.id = ? AND c.version = ?
-  `).get(account, id, version) as { source: Uint8Array } | undefined;
+    WHERE p.account_id = $1 AND p.id = $2 AND c.version = $3
+    `,
+    [account, id, version],
+  );
 }
 
 export function renderCvRevision(original: string, excerpts: { section: string; excerpt: string }[]) {
