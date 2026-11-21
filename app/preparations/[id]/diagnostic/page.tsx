@@ -12,8 +12,8 @@ export default async function Diagnostic({ params, searchParams }: {
 }) {
   const account = await requireAccount();
   const { id } = await params;
-  const job = readTargetJob(account, id);
-  const attempt = job && readDiagnostic(account, id, job.version);
+  const job = await readTargetJob(account, id);
+  const attempt = job && (await readDiagnostic(account, id, job.version));
   if (!job || !attempt) notFound();
   const question = attempt.question;
   return (

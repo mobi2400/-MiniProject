@@ -8,13 +8,13 @@ import { requireAccount } from "../../../../lib/session";
 
 export async function refreshListing(id: string): Promise<string> {
   const account = await requireAccount();
-  const snapshot = readListingSnapshot(account, id);
+  const snapshot = await readListingSnapshot(account, id);
   const board = configuredBoards().find(({ id }) => id === snapshot?.source_id);
   if (!snapshot || !board) return "This posting’s source is unavailable for status checks.";
   const checkedAt = Date.now();
   try {
     const status = await checkListingStatus(board, snapshot.listing_id);
-    saveListingStatus(account, id, status, checkedAt);
+    await saveListingStatus(account, id, status, checkedAt);
   } catch {
     return "The source did not respond. Try checking again later.";
   }

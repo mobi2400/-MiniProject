@@ -10,7 +10,7 @@ export default async function DeletePreparation({ params, searchParams }: {
 }) {
   const account = await requireAccount();
   const { id } = await params;
-  const job = readTargetJob(account, id);
+  const job = await readTargetJob(account, id);
   if (!job) notFound();
   return (
     <main className="shell form-page">

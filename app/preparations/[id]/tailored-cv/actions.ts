@@ -9,12 +9,15 @@ import { buildTailoredEdits, saveTailoredDraft } from "../../../../lib/tailored-
 
 export async function generateTailoredDraft(id: string) {
   const account = await requireAccount();
-  const job = readTargetJob(account, id);
-  const cv = readCv(account, id);
-  if (!job || !readListingSnapshot(account, id)) notFound();
+  const job = await readTargetJob(account, id);
+  const cv = await readCv(account, id);
+  const listing = await readListingSnapshot(account, id);
+  if (!job || !listing) notFound();
   if (!cv) redirect(`/preparations/${id}/setup`);
-  const edits = buildTailoredEdits(job.description, cv.evidence, readKeywordConfirmations(account, id, job.version));
-  if (!saveTailoredDraft(account, id, job.version, cv.version, edits)) {
+  const confirmations = await readKeywordConfirmations(account, id, job.version);
+  const edits = buildTailoredEdits(job.description, cv.evidence, confirmations);
+  const saved = await saveTailoredDraft(account, id, job.version, cv.version, edits);
+  if (!saved) {
     redirect(`/preparations/${id}/tailored-cv?changed=1`);
   }
   redirect(`/preparations/${id}/tailored-cv`);

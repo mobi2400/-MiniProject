@@ -7,6 +7,6 @@ import { requireAccount } from "../../../../lib/session";
 export async function confirmDeletion(id: string, form: FormData) {
   const account = await requireAccount();
   if (form.get("confirm") !== "yes") redirect(`/preparations/${id}/delete?confirm=required`);
-  deletePreparation(account, id);
+  await deletePreparation(account, id);
   redirect("/dashboard");
 }

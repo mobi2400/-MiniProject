@@ -9,10 +9,10 @@ import { startDiagnostic } from "../diagnostic/actions";
 export default async function Offer({ params }: { params: Promise<{ id: string }> }) {
   const account = await requireAccount();
   const { id } = await params;
-  const job = readTargetJob(account, id);
+  const job = await readTargetJob(account, id);
   if (!job) notFound();
-  const required = readTrainingRequirements(account, id, job.version);
-  const diagnostic = readDiagnostic(account, id, job.version);
+  const required = await readTrainingRequirements(account, id, job.version);
+  const diagnostic = await readDiagnostic(account, id, job.version);
   const unsupported = required.some(({ title }) => !hasCoverage(title));
   return (
     <main className="shell form-page">
