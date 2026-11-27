@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { cvSections } from "../../../../lib/cv-text";
 import { correctCvSection } from "./cv-action";
 
@@ -11,18 +11,45 @@ export function EvidenceForm({ preparationId, version, line, section }: {
   section: string;
 }) {
   const [error, action, pending] = useActionState(correctCvSection.bind(null, preparationId, version, line), "");
+  const [editing, setEditing] = useState(false);
+
   return (
-    <details>
-      <summary>Correct section for line {line}</summary>
-      <form action={action} className="fields">
-        <label>Section for line {line}
-          <select name="section" defaultValue={section}>
-            {cvSections.map((name) => <option key={name}>{name}</option>)}
-          </select>
-        </label>
-        {error && <p role="alert">{error}</p>}
-        <button type="submit" className="button" disabled={pending}>{pending ? "Saving…" : "Save correction"}</button>
-      </form>
-    </details>
+    <div style={{ marginTop: "0.5rem" }}>
+      {!editing ? (
+        <button
+          type="button"
+          className="text-button"
+          onClick={() => setEditing(true)}
+          style={{ fontSize: "0.875rem" }}
+        >
+          Edit section
+        </button>
+      ) : (
+        <form
+          action={async (formData) => {
+            await action(formData);
+            setEditing(false);
+          }}
+          className="fields"
+          style={{ marginTop: "0.5rem", padding: "0.75rem", background: "#f8f7fd", borderRadius: "0.5rem" }}
+        >
+          <label>
+            Section
+            <select name="section" defaultValue={section}>
+              {cvSections.map((name) => <option key={name} value={name}>{name}</option>)}
+            </select>
+          </label>
+          {error && <p role="alert">{error}</p>}
+          <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+            <button type="submit" className="button" disabled={pending}>
+              {pending ? "Saving…" : "Save section"}
+            </button>
+            <button type="button" className="text-button" onClick={() => setEditing(false)}>
+              Cancel
+            </button>
+          </div>
+        </form>
+      )}
+    </div>
   );
 }
