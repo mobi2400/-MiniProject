@@ -9,6 +9,7 @@ import { parseJobTitles } from "../../lib/job-search-titles";
 import { configuredBoards, searchBoard } from "../../lib/job-sources";
 import { createPreparation, readTargetJob } from "../../lib/preparations";
 import { requireAccount } from "../../lib/session";
+import { discoverJobsWithTavily, type DiscoveredJob } from "../../lib/tavily-jobs";
 
 type SearchTitleState = { error?: string; titles?: string[] };
 
@@ -30,6 +31,65 @@ export async function prepareForListing(boardId: string, listingId: string) {
     }
   }
   redirect(`/preparations/${id}/setup`);
+}
+
+export async function prepareFromDiscoveredJob(job: Pick<DiscoveredJob, "url" | "title" | "company" | "location" | "snippet">) {
+  const account = await requireAccount();
+  const profile = await one("SELECT 1 FROM profiles WHERE account_id = $1", [account]);
+  if (!profile) redirect("/profile");
+
+  const parsedUrl = URL.parse(job.url);
+  if (!parsedUrl || parsedUrl.protocol !== "https:") {
+    return { error: "This job link is invalid." };
+  }
+
+  const title = job.title.trim().slice(0, 160);
+  const snippet = job.snippet.trim();
+  if (!title || !snippet) {
+    return { error: "This job listing has no description to prepare from." };
+  }
+
+  const description = [
+    `Role: ${title}`,
+    job.company ? `Company: ${job.company.trim()}` : "",
+    job.location ? `Location: ${job.location.trim()}` : "",
+    `Source URL: ${parsedUrl.href}`,
+    "",
+    snippet,
+  ]
+    .filter(Boolean)
+    .join("\n")
+    .slice(0, 20000);
+
+  const id = createHash("sha256").update(JSON.stringify([account, "tavily", parsedUrl.href])).digest("hex");
+  const existingJob = await readTargetJob(account, id);
+  if (!existingJob) {
+    try {
+      await createPreparation(account, id, title, description);
+    } catch {
+      return { error: "The posting could not be saved. Try again shortly." };
+    }
+  }
+  redirect(`/preparations/${id}/setup`);
+}
+
+export async function discoverWebJobs(location = "") {
+  const account = await requireAccount();
+  const saved = await one<{ titles_json: string }>(
+    "SELECT titles_json FROM job_search_preferences WHERE account_id = $1",
+    [account],
+  );
+  const titles = saved ? (JSON.parse(saved.titles_json) as string[]) : [];
+  if (!titles.length) return { error: "Save at least one search title first." };
+
+  try {
+    const discovery = await discoverJobsWithTavily(account, titles, location);
+    return { discovery };
+  } catch (err) {
+    return {
+      error: err instanceof Error ? err.message : "Web job search could not run. Try again.",
+    };
+  }
 }
 
 export async function searchSavedJobs(source?: string) {
