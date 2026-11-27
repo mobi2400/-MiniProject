@@ -9,7 +9,7 @@
 * { box-sizing: border-box; }
 body { margin: 0; color: var(--ink); background: #fbfaff; font: 1rem/1.6 Inter, system-ui, sans-serif; }
 a { color: inherit; }
-:focus-visible { outline: 3px solid #7958ef; outline-offset: 5px; }
+:focus-visible { outline: 3px solid var(--indigo); outline-offset: 2px; }
 .shell { width: min(72rem, calc(100% - 3rem)); margin-inline: auto; }
 .skip { position: absolute; inset: 1rem auto auto 1rem; padding: .5rem 1rem; background: white; transform: translateY(-180%); }
 .skip:focus { transform: none; }
@@ -18,11 +18,13 @@ a { color: inherit; }
 .hero { display: grid; grid-template-columns: 1.35fr 1fr; align-items: center; gap: clamp(2rem, 6vw, 6rem); padding-block: clamp(3rem, 8vw, 7rem); }
 .label { margin: 0 0 .6rem; font-size: .875rem; font-weight: 750; color: var(--indigo); }
 h1, h2, h3 { margin: 0; line-height: 1.1; }
-h1 { font-size: clamp(2.8rem, 7vw, 5.6rem); letter-spacing: -.065em; max-width: 11ch; }
-h2 { font-size: clamp(1.65rem, 3vw, 2.25rem); letter-spacing: -.035em; }
+h1 { font-size: clamp(2.4rem, 6vw, 4.5rem); letter-spacing: -.05em; max-width: 15ch; }
+h2 { font-size: clamp(1.5rem, 3vw, 2.1rem); letter-spacing: -.035em; }
 .intro { max-width: 36rem; color: var(--muted); font-size: 1.15rem; margin-block: 1.25rem 1.65rem; }
-.button { display: inline-block; padding: .7rem 1.2rem; background: var(--indigo); color: white; border-radius: .55rem; text-decoration: none; font-weight: 700; }
+.button { display: inline-block; padding: .7rem 1.2rem; background: var(--indigo); color: white; border-radius: .55rem; text-decoration: none; font-weight: 700; min-height: 44px; line-height: 1.4; border: none; cursor: pointer; text-align: center; }
 .button:hover { background: #35268a; }
+.button-secondary { background: white; color: var(--indigo); border: 2px solid var(--indigo); }
+.button-secondary:hover { background: #f2effb; }
 .example { background: #eeebfc; border: 1px solid var(--line); padding: clamp(1.25rem, 4vw, 2.5rem); border-radius: 1.25rem; }
 .example dl { margin: 1.4rem 0 0; }
 .example dl div { border-top: 1px solid #cbc5e7; padding-block: .65rem; }
@@ -34,29 +36,93 @@ h2 { font-size: clamp(1.65rem, 3vw, 2.25rem); letter-spacing: -.035em; }
 .steps p { margin: .6rem 0 0; color: var(--muted); }
 .footer { color: var(--muted); padding-block: 1.5rem; }
 .header-links { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; }
-.form-page { max-width: 32rem; padding-block: 2.5rem; }
-.form-page h1 { max-width: none; font-size: clamp(2rem, 6vw, 3.5rem); margin-block: 1.25rem; }
+.form-page { max-width: 38rem; padding-block: 2.5rem; }
+.form-page h1 { max-width: none; font-size: clamp(2rem, 5vw, 3rem); margin-block: 1.25rem; }
 .fields { display: grid; gap: 1rem; margin-block: 1.5rem; }
 .fields label { display: grid; gap: .4rem; font-weight: 650; }
-.fields input { width: 100%; padding: .65rem .75rem; border: 1px solid #77758c; border-radius: .45rem; font: inherit; }
+.fields input { width: 100%; padding: .65rem .75rem; border: 1px solid #77758c; border-radius: .45rem; font: inherit; min-height: 44px; }
 .fields textarea { width: 100%; padding: .65rem .75rem; border: 1px solid #77758c; border-radius: .45rem; font: inherit; resize: vertical; }
 .saved-description { white-space: pre-wrap; overflow-wrap: anywhere; }
-.fields fieldset { min-width: 0; margin: 0; border: 1px solid var(--line); border-radius: .45rem; }
-.fields select { width: 100%; padding: .65rem .75rem; border: 1px solid #77758c; border-radius: .45rem; font: inherit; }
-.fields .check-label { display: flex; align-items: baseline; }
-.fields .check-label input { width: auto; }
-.dashboard { max-width: 52rem; }
+.fields fieldset { min-width: 0; margin: 0; border: 1px solid var(--line); border-radius: .45rem; padding: 1rem; }
+.fields select { width: 100%; padding: .65rem .75rem; border: 1px solid #77758c; border-radius: .45rem; font: inherit; min-height: 44px; }
+.fields .check-label { display: flex; align-items: baseline; gap: .5rem; min-height: 44px; }
+.fields .check-label input { width: auto; min-height: auto; }
+.dashboard { max-width: 56rem; }
 .role-progress { margin-block: 1.5rem; padding: clamp(1rem, 4vw, 1.75rem); border: 1px solid var(--line); border-radius: .75rem; overflow-wrap: anywhere; }
 .dashboard-scores { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); gap: 1rem; }
-.dashboard-scores div { padding: .85rem; background: #eeebfc; border-radius: .5rem; }
-.dashboard-scores dt { font-weight: 650; }
-.dashboard-scores dd { margin: 0; }
-.fields p { margin: 0; }
-.fields button, .text-button { justify-self: start; border: 0; font: inherit; cursor: pointer; }
-.fields button:disabled { opacity: .65; cursor: wait; }
-.text-button { background: none; color: var(--indigo); text-decoration: underline; padding: 0; }
+.text-button { background: none; border: none; padding: 0; font: inherit; color: var(--indigo); text-decoration: underline; cursor: pointer; min-height: 44px; display: inline-flex; align-items: center; }
 
-@media (max-width: 48rem) {
-  .hero, .steps { grid-template-columns: 1fr; }
-  .steps { gap: 1.25rem; }
+/* Journey bar styles */
+.journey-bar {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: #f4f2fc;
+  border: 1px solid var(--line);
+  border-radius: .75rem;
+}
+.journey-summary {
+  font-size: 1.1rem;
+  margin-bottom: .75rem;
+}
+.journey-steps {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: .5rem;
+  overflow-x: auto;
+}
+.journey-step {
+  flex: 1;
+  min-width: 0;
+}
+.journey-step a {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  text-decoration: none;
+  padding: .4rem .6rem;
+  border-radius: .4rem;
+  font-size: .875rem;
+}
+.journey-step.is-current a {
+  background: var(--indigo);
+  color: white;
+  font-weight: 700;
+}
+.journey-step.is-done a {
+  color: #2b7a3d;
+  font-weight: 600;
+}
+.step-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.08);
+  font-size: .75rem;
+  flex-shrink: 0;
+}
+.journey-step.is-current .step-badge {
+  background: white;
+  color: var(--indigo);
+}
+
+.page-navigation-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .journey-steps {
+    display: none;
+  }
 }
