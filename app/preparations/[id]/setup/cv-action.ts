@@ -3,7 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 import { readCv, saveCv, saveCvCorrection } from "../../../../lib/cv";
-import { cvByteLimit, extractTextEvidence, isCvSection } from "../../../../lib/cv-text";
+import { isCvSection } from "../../../../lib/cv-text";
+import { extractCvText, extractEvidenceFromNormalizedText } from "../../../../lib/cv-extract";
 import { readTargetJob } from "../../../../lib/preparations";
 import { requireAccount } from "../../../../lib/session";
 
@@ -31,18 +32,22 @@ export async function uploadCv(preparationId: string, _: string, data: FormData)
   const job = await readTargetJob(accountId, preparationId);
   if (!job) notFound();
   const file = data.get("cv");
-  if (!(file instanceof File) || !/\.txt$/iu.test(file.name) || file.name.length > 255 || !file.size || file.size > cvByteLimit) {
-    return "Choose a plain-text CV (.txt) up to 128 KB.";
+  if (!(file instanceof File) || file.name.length > 255 || !file.size) {
+    return "Choose a CV (.txt, .pdf, or .docx) up to 5 MB.";
   }
+
   const bytes = new Uint8Array(await file.arrayBuffer());
-  let evidence;
-  try {
-    evidence = extractTextEvidence(bytes);
-  } catch {
-    return "This file could not be read as UTF-8 text. Export it as UTF-8 and try again.";
+  const extracted = await extractCvText(bytes, file.name);
+  if ("error" in extracted) {
+    return extracted.error;
   }
-  if (!evidence.length) return "Add a heading such as Skills or Experience above the relevant text, then try again.";
-  const saved = await saveCv(accountId, preparationId, file.name, bytes, evidence);
+
+  const evidence = extractEvidenceFromNormalizedText(extracted.text);
+  if (!evidence.length) {
+    return "Add a heading such as Skills or Experience above the relevant text, then try again.";
+  }
+
+  const saved = await saveCv(accountId, preparationId, file.name, bytes, evidence, extracted.format);
   if (!saved) notFound();
   revalidatePath(`/preparations/${preparationId}/setup`);
   return "";

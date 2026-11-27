@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { one, run } from "./db";
 import type { CvEvidence } from "./cv-text";
+import type { CvFormat } from "./cv-extract";
 
 export async function saveCvCorrection(
   accountId: string,
@@ -10,8 +11,8 @@ export async function saveCvCorrection(
 ): Promise<boolean> {
   const count = await run(
     `
-    INSERT INTO cv_versions (id, preparation_id, version, filename, source, evidence_json)
-    SELECT $1, c.preparation_id, c.version + 1, c.filename, c.source, $2
+    INSERT INTO cv_versions (id, preparation_id, version, filename, source, evidence_json, format)
+    SELECT $1, c.preparation_id, c.version + 1, c.filename, c.source, $2, c.format
     FROM cv_versions c JOIN preparations p ON p.id = c.preparation_id
     WHERE p.id = $3 AND p.account_id = $4 AND c.version = $5
       AND c.version = (SELECT MAX(version) FROM cv_versions WHERE preparation_id = p.id)
@@ -27,14 +28,15 @@ export async function saveCv(
   filename: string,
   bytes: Uint8Array,
   evidence: CvEvidence[],
+  format: CvFormat = "txt",
 ): Promise<boolean> {
   const count = await run(
     `
-    INSERT INTO cv_versions (id, preparation_id, version, filename, source, evidence_json)
-    SELECT $1, p.id, COALESCE((SELECT MAX(version) FROM cv_versions WHERE preparation_id = p.id), 0) + 1, $2, $3, $4
-    FROM preparations p WHERE p.id = $5 AND p.account_id = $6
+    INSERT INTO cv_versions (id, preparation_id, version, filename, source, evidence_json, format)
+    SELECT $1, p.id, COALESCE((SELECT MAX(version) FROM cv_versions WHERE preparation_id = p.id), 0) + 1, $2, $3, $4, $5
+    FROM preparations p WHERE p.id = $6 AND p.account_id = $7
     `,
-    [randomUUID(), filename, Buffer.from(bytes), JSON.stringify(evidence), preparationId, accountId],
+    [randomUUID(), filename, Buffer.from(bytes), JSON.stringify(evidence), format, preparationId, accountId],
   );
   return count === 1;
 }
@@ -42,14 +44,21 @@ export async function saveCv(
 export async function readCv(
   accountId: string,
   preparationId: string,
-): Promise<{ filename: string; version: number; evidence: CvEvidence[] } | undefined> {
-  const row = await one<{ filename: string; version: number; evidence_json: string }>(
+): Promise<{ filename: string; version: number; evidence: CvEvidence[]; format: CvFormat } | undefined> {
+  const row = await one<{ filename: string; version: number; evidence_json: string; format: CvFormat }>(
     `
-    SELECT c.filename, c.version, c.evidence_json
+    SELECT c.filename, c.version, c.evidence_json, COALESCE(c.format, 'txt') as format
     FROM cv_versions c JOIN preparations p ON p.id = c.preparation_id
     WHERE p.id = $1 AND p.account_id = $2 ORDER BY c.version DESC LIMIT 1
     `,
     [preparationId, accountId],
   );
-  return row ? { filename: row.filename, version: row.version, evidence: JSON.parse(row.evidence_json) as CvEvidence[] } : undefined;
+  return row
+    ? {
+        filename: row.filename,
+        version: row.version,
+        evidence: JSON.parse(row.evidence_json) as CvEvidence[],
+        format: (row.format as CvFormat) || "txt",
+      }
+    : undefined;
 }
