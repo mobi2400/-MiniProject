@@ -5,6 +5,8 @@ import { requireAccount } from "../../../../lib/session";
 import { readDiagnostic, readTrainingRequirements } from "../../../../lib/training";
 import { hasCoverage, qualifyingAttempts, readinessThreshold } from "../../../../lib/training-bank";
 import { startDiagnostic } from "../diagnostic/actions";
+import { getStage } from "../../../../lib/journey";
+import { JourneyBar } from "../../../../components/JourneyBar";
 import { copy } from "../../../../lib/copy";
 
 export default async function Offer({ params }: { params: Promise<{ id: string }> }) {
@@ -15,24 +17,29 @@ export default async function Offer({ params }: { params: Promise<{ id: string }
   const required = await readTrainingRequirements(account, id, job.version);
   const diagnostic = await readDiagnostic(account, id, job.version);
   const unsupported = required.some(({ title }) => !hasCoverage(title));
+  const stage = await getStage(account, id);
+
   return (
     <main className="shell form-page">
-      <Link href={`/preparations/${id}/analysis`}>Back to CV comparison</Link>
+      <Link href={`/preparations/${id}/analysis`}>Back to CV match</Link>
+
+      <JourneyBar currentStep={stage.step} preparationId={id} />
+
       <h1>{copy.roleCoverage}</h1>
       <h2>{job.title}</h2>
       {required.length ? (
         <>
-          <ul>{required.map(({ id, title }) => (
+          <ul style={{ marginBlock: "1rem" }}>{required.map(({ id, title }) => (
             <li key={id}>{title} · {hasCoverage(title) ? "Assessment material available" : copy.missingSkillPractice(title)}</li>
           ))}</ul>
           {unsupported ? <p>Some required skills do not have practice available yet. You can still use the other steps.</p> : (
-            <section aria-labelledby="preparation-terms">
-              <h2 id="preparation-terms">Preparation terms</h2>
+            <section aria-labelledby="preparation-terms" style={{ background: "#f8f7fd", padding: "1.25rem", borderRadius: "0.75rem", marginBlock: "1rem" }}>
+              <h2 id="preparation-terms" style={{ fontSize: "1.25rem" }}>Preparation terms</h2>
               <p>The pilot plan includes a starting skill check, guided practice, and skill checks for the skills above.</p>
               <p>The revised CV becomes available after {qualifyingAttempts} consecutive skill checks achieve at least {readinessThreshold}% overall and in each required skill.</p>
-              <p>{copy.practiceFreeDuringPilot}</p>
+              <p style={{ fontWeight: 600 }}>{copy.practiceFreeDuringPilot}</p>
               {diagnostic ? (
-                <Link href={`/preparations/${id}/diagnostic`}>{diagnostic.submittedAt ? "View skill check feedback" : copy.resumeDiagnostic}</Link>
+                <Link className="button" href={`/preparations/${id}/diagnostic`}>{diagnostic.submittedAt ? "View skill check feedback" : copy.resumeDiagnostic}</Link>
               ) : (
                 <form className="fields" action={startDiagnostic.bind(null, id)}>
                   <button className="button">{copy.startDiagnostic}</button>
@@ -42,6 +49,19 @@ export default async function Offer({ params }: { params: Promise<{ id: string }
           )}
         </>
       ) : <p>{copy.compareFirstPrompt}</p>}
+
+      <div className="page-navigation-actions">
+        {stage.backAction ? (
+          <Link href={stage.backAction.href} className="text-button">
+            ← {stage.backAction.label}
+          </Link>
+        ) : <div />}
+        {diagnostic?.submittedAt && (
+          <Link href={stage.nextAction.href} className="button">
+            {stage.nextAction.label} →
+          </Link>
+        )}
+      </div>
     </main>
   );
 }
