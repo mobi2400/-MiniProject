@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { readTargetJob } from "../../../../lib/preparations";
 import { requireAccount } from "../../../../lib/session";
 import { readDiagnostic } from "../../../../lib/training";
+import { getStage } from "../../../../lib/journey";
+import { JourneyBar } from "../../../../components/JourneyBar";
 import { submitDiagnostic } from "./actions";
 import { JoinPractice } from "./practice";
 import { copy } from "../../../../lib/copy";
@@ -16,25 +18,34 @@ export default async function Diagnostic({ params, searchParams }: {
   const job = await readTargetJob(account, id);
   const attempt = job && (await readDiagnostic(account, id, job.version));
   if (!job || !attempt) notFound();
+  const stage = await getStage(account, id);
   const question = attempt.question;
+
   return (
     <main className="shell form-page">
       <Link href={`/preparations/${id}/offer`}>Back to role coverage</Link>
-      <h1>SQL joins skill check</h1>
-      <p>{job.title}</p>
+
+      <JourneyBar currentStep={stage.step} preparationId={id} />
+
+      <h1>SQL joins starting skill check</h1>
+      <p style={{ color: "var(--muted)" }}>{job.title}</p>
+      
       {attempt.submittedAt !== null ? (
-        <section aria-labelledby="diagnostic-feedback">
+        <section aria-labelledby="diagnostic-feedback" style={{ marginBlock: "1.5rem" }}>
           <h2 id="diagnostic-feedback">{copy.diagnosticFeedback}</h2>
-          <p>Score: {attempt.score}%</p>
-          <p>Your answer: {attempt.selected === null ? "" : question.options[attempt.selected]}</p>
-          <p>Correct answer: {question.options[question.answer]}</p>
-          <p>{question.feedback}</p>
+          <p style={{ fontSize: "1.25rem", fontWeight: 700, marginBlock: "0.5rem" }}>Score: {attempt.score}%</p>
+          <p>Your answer: <strong>{attempt.selected === null ? "" : question.options[attempt.selected]}</strong></p>
+          <p>Correct answer: <strong>{question.options[question.answer]}</strong></p>
+          <p style={{ background: "#f8f7fd", padding: "1rem", borderRadius: "0.5rem" }}>{question.feedback}</p>
           <p>Use this result to identify what to practice. Readiness requires independent skill checks.</p>
           {attempt.score === 0 && <JoinPractice />}
-          <Link className="button" href={`/preparations/${id}/reassessment`}>Go to skill check</Link>
+          <div style={{ marginTop: "1.5rem" }}>
+            <Link className="button" href={`/preparations/${id}/reassessment`}>See results & go to skill check</Link>
+          </div>
         </section>
       ) : (
         <form className="fields" action={submitDiagnostic.bind(null, id, job.version)}>
+          <p style={{ fontWeight: 600 }}>Question 1 of 1</p>
           <fieldset className="fields">
             <legend>{question.prompt}</legend>
             {question.options.map((option, index) => (
@@ -47,6 +58,19 @@ export default async function Diagnostic({ params, searchParams }: {
           <button className="button">Submit skill check</button>
         </form>
       )}
+
+      <div className="page-navigation-actions">
+        {stage.backAction ? (
+          <Link href={stage.backAction.href} className="text-button">
+            ← {stage.backAction.label}
+          </Link>
+        ) : <div />}
+        {attempt.submittedAt !== null && (
+          <Link href={stage.nextAction.href} className="button">
+            {stage.nextAction.label} →
+          </Link>
+        )}
+      </div>
     </main>
   );
 }
