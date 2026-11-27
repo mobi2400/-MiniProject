@@ -4,8 +4,8 @@ import { many, one } from "../../lib/db";
 import { requireAccount } from "../../lib/session";
 import { hasReadiness, readDiagnostic, readReassessments, readTrainingRequirements } from "../../lib/training";
 import { hasCoverage } from "../../lib/training-bank";
+import { getStage } from "../../lib/journey";
 import { signOut } from "../account/actions";
-
 import { copy } from "../../lib/copy";
 
 export default async function Dashboard({ searchParams }: { searchParams: Promise<{ role?: string }> }) {
@@ -22,6 +22,14 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
     `,
     [accountId],
   );
+
+  const prepStages = await Promise.all(
+    preparations.map(async (prep) => {
+      const stage = await getStage(accountId, prep.id);
+      return { prep, stage };
+    }),
+  );
+
   const selectedId = (await searchParams).role;
   const role = preparations.find(({ id }) => id === selectedId) ?? preparations[0];
 
@@ -39,26 +47,18 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
       ));
     const diagnostic = await readDiagnostic(accountId, role.id, role.version);
     const attempts = await readReassessments(accountId, role.id, role.version);
-    const latest = attempts.at(-1);
     const scored = attempts.findLast(({ score }) => score !== null);
     const required = await readTrainingRequirements(accountId, role.id, role.version);
     const covered = required.length > 0 && required.every(({ title }) => hasCoverage(title));
     const ready = covered && hasReadiness(attempts);
-    let action = { label: "Upload your CV", path: "setup" };
-    if (latest?.score === null) action = { label: copy.resumeReassessment, path: "reassessment" };
-    else if (diagnostic?.submittedAt === null) action = { label: copy.resumeDiagnostic, path: "diagnostic" };
-    else if (ready) action = { label: "Review revised CV", path: "revised-cv" };
-    else if (cv && !comparison) action = { label: "Compare your CV", path: "analysis" };
-    else if (comparison && (!covered || !diagnostic)) action = { label: "View practice available", path: "offer" };
-    else if (diagnostic?.submittedAt && latest) action = { label: copy.reviewReassessment, path: "reassessment" };
-    else if (diagnostic?.submittedAt) action = { label: "Review skill check and practice", path: "diagnostic" };
+    const stage = await getStage(accountId, role.id);
 
     return (
       <section className="role-progress" aria-labelledby="selected-role">
         <h2 id="selected-role">{role.title}</h2>
-        <p>{ready ? copy.readinessMet : copy.inProgress}</p>
-        <Link className="button" href={`${base}/${action.path}`}>{action.label}</Link>
-        <dl className="dashboard-scores">
+        <p><strong>Step {stage.step} of 5: {stage.name}</strong> · {ready ? copy.readinessMet : copy.inProgress}</p>
+        <Link className="button" href={stage.nextAction.href}>{stage.nextAction.label}</Link>
+        <dl className="dashboard-scores" style={{ marginBlock: "1.25rem" }}>
           <div><dt>{copy.cvFitEstimate}</dt><dd>{comparison ? `${comparison.score}%` : "Comparison pending"}</dd></div>
           <div><dt>SQL joins assessment</dt><dd>{scored ? `${scored.score}% · ${copy.reassessment}` :
             diagnostic?.score != null ? `${diagnostic.score}% · ${copy.diagnostic}` : copy.untested}</dd></div>
@@ -66,7 +66,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
         <nav className="header-links" aria-label="Selected preparation">
           <Link href={`${base}/setup`}>Preparation setup</Link>
           {diagnostic?.submittedAt && <Link href={`${base}/diagnostic`}>{copy.diagnosticFeedback}</Link>}
-          {latest && latest.score !== null && <Link href={`${base}/reassessment`}>{copy.reassessmentFeedback}</Link>}
+          {attempts.some((a) => a.score !== null) && <Link href={`${base}/reassessment`}>{copy.reassessmentFeedback}</Link>}
         </nav>
       </section>
     );
@@ -76,17 +76,57 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
     <main className="shell form-page dashboard">
       <Link href="/">MiniProject</Link>
       <h1>Your preparations</h1>
-      <p><Link href="/jobs">Job search</Link></p>
-      {profile ? <Link className="button" href="/preparations/new">{copy.addJobTitle}</Link> : <Link href="/profile">Complete your profile</Link>}
-      {preparations.length ? (
-        <nav aria-label="Select a role">
-          <ul>{preparations.map(({ id, title }) => (
-            <li key={id}><Link href={`/dashboard?role=${encodeURIComponent(id)}`} aria-current={role?.id === id ? "page" : undefined}>{title}</Link></li>
-          ))}</ul>
-        </nav>
-      ) : <p>{copy.noJobsYet}</p>}
+
+      <section aria-labelledby="find-jobs-heading" style={{ marginBlock: "1rem", padding: "1rem", background: "#f8f7fd", borderRadius: "0.5rem" }}>
+        <h2 id="find-jobs-heading" style={{ fontSize: "1.2rem", margin: "0 0 0.5rem" }}>Find jobs that match your CV</h2>
+        <p style={{ margin: "0 0 0.75rem", color: "var(--muted)" }}>Search job opportunities matching your skills and titles.</p>
+        <Link className="button button-secondary" href="/jobs">Search jobs</Link>
+      </section>
+
+      {!profile && (
+        <p style={{ color: "var(--muted)", marginBlock: "0.5rem" }}>
+          Add your name and career goal first so we can personalize your preparation.{" "}
+          <Link href="/profile" style={{ color: "var(--indigo)", fontWeight: 700 }}>Complete profile</Link>
+        </p>
+      )}
+      <div style={{ marginBlock: "1rem" }}>
+        <Link className="button" href="/preparations/new">{copy.addJobTitle}</Link>
+      </div>
+
+      {prepStages.length ? (
+        <section aria-label="Saved preparation cards" style={{ display: "grid", gap: "1rem", marginBlock: "1.5rem" }}>
+          {prepStages.map(({ prep, stage }) => (
+            <div
+              key={prep.id}
+              style={{
+                border: "1px solid var(--line)",
+                borderRadius: "0.75rem",
+                padding: "1.25rem",
+                background: role?.id === prep.id ? "#f5f3fe" : "white",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "1rem", flexWrap: "wrap" }}>
+                <div>
+                  <h3 style={{ margin: "0 0 0.25rem", fontSize: "1.25rem" }}>
+                    <Link href={`/dashboard?role=${encodeURIComponent(prep.id)}`}>{prep.title}</Link>
+                  </h3>
+                  <p style={{ margin: 0, color: "var(--muted)", fontSize: "0.9rem" }}>
+                    Step {stage.step} of 5: <strong>{stage.name}</strong>
+                  </p>
+                </div>
+                <Link className="button" href={stage.nextAction.href}>
+                  Continue
+                </Link>
+              </div>
+            </div>
+          ))}
+        </section>
+      ) : (
+        <p>{copy.noJobsDashboard}</p>
+      )}
+
       {await renderProgress()}
-      <form action={signOut}><button className="text-button">Sign out</button></form>
+      <form action={signOut} style={{ marginTop: "2rem" }}><button className="text-button">Sign out</button></form>
     </main>
   );
 }
