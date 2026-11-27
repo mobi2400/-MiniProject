@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import type { Requirement } from "../../../../lib/cv-fit";
 import type { CvEvidence } from "../../../../lib/cv-text";
+import { copy } from "../../../../lib/copy";
 import { CvSuggestions } from "./cv-suggestions";
 
 type Report = { items: Requirement[]; score: number | null };
@@ -26,6 +27,11 @@ export function CompareForm({ evidence, report, save, suggest }: {
     setItems(items.map((item) => item.id === id ? { ...item, ...patch } : item));
     setResult(undefined);
   }
+
+  // Divide items into 3 plain language groups when result exists
+  const supportedItems = result?.items.filter((item) => item.evidence && !item.partial) ?? [];
+  const partlySupportedItems = result?.items.filter((item) => item.evidence && item.partial) ?? [];
+  const missingItems = result?.items.filter((item) => !item.evidence) ?? [];
 
   return (
     <>
@@ -63,6 +69,7 @@ export function CompareForm({ evidence, report, save, suggest }: {
         });
       }}>
         <p>Add requirements from the job description and choose supporting lines from your CV. This estimate reflects the evidence you select.</p>
+        
         {items.map((item, index) => (
           <fieldset className="fields" key={item.id} disabled={busy}>
             <legend>Requirement {index + 1}</legend>
@@ -90,25 +97,72 @@ export function CompareForm({ evidence, report, save, suggest }: {
             }}>Remove requirement {index + 1}</button>}
           </fieldset>
         ))}
-        {items.length < 30 && <button type="button" className="text-button" disabled={busy} onClick={() => {
-          setItems([...items, { ...firstRequirement, id: Math.max(...items.map(({ id }) => id)) + 1 }]);
-          setResult(undefined);
-        }}>Add requirement</button>}
+
+        <details style={{ marginBlock: "0.5rem" }}>
+          <summary style={{ cursor: "pointer", fontWeight: 600 }}>Add a requirement not listed</summary>
+          {items.length < 30 && (
+            <button type="button" className="text-button" style={{ marginTop: "0.5rem" }} disabled={busy} onClick={() => {
+              setItems([...items, { ...firstRequirement, id: Math.max(...items.map(({ id }) => id)) + 1 }]);
+              setResult(undefined);
+            }}>+ Add another requirement</button>
+          )}
+        </details>
+
         {error && <p role="alert">{error}</p>}
         <button className="button" disabled={busy}>{pending ? "Saving comparison…" : "Compare CV"}</button>
       </form>
+
       {result && (
-        <section aria-label="Comparison result">
-          <h2 role="status">How well your CV matches this job: {result.score}%</h2>
-          <ul>{result.items.map((item) => {
-            const source = evidence.find(({ line }) => String(line) === item.evidence);
-            return (
-              <li key={item.id}>
-                <strong>{item.title}</strong> · {item.required ? "Required" : "Preferred"}
-                {source ? <p>{item.partial ? "Partial match" : "Match"} · {source.section} · Line {source.line}: {source.excerpt}</p> : <p>Gap in the CV · No supporting evidence selected.</p>}
-              </li>
-            );
-          })}</ul>
+        <section aria-label="Comparison result" style={{ marginTop: "2rem" }}>
+          <div style={{ background: "#f2effb", padding: "1.25rem", borderRadius: "0.75rem", marginBottom: "1.5rem" }}>
+            <h2 role="status" style={{ fontSize: "1.4rem" }}>How well your CV matches this job: {result.score}%</h2>
+            <p style={{ margin: "0.5rem 0 0", color: "var(--muted)" }}>{copy.fitScoreExplanation}</p>
+          </div>
+
+          <div style={{ display: "grid", gap: "1.5rem" }}>
+            {supportedItems.length > 0 && (
+              <div>
+                <h3 style={{ color: "#2b7a3d" }}>{copy.supportsRequirement} ({supportedItems.length})</h3>
+                <ul>{supportedItems.map((item) => {
+                  const source = evidence.find(({ line }) => String(line) === item.evidence);
+                  return (
+                    <li key={item.id} style={{ marginBlock: "0.5rem" }}>
+                      <strong>{item.title}</strong> · {item.required ? "Required" : "Preferred"}
+                      {source && <p style={{ margin: "0.2rem 0 0", color: "var(--muted)" }}>{source.section} · Line {source.line}: {source.excerpt}</p>}
+                    </li>
+                  );
+                })}</ul>
+              </div>
+            )}
+
+            {partlySupportedItems.length > 0 && (
+              <div>
+                <h3 style={{ color: "#b26b00" }}>{copy.partlySupportsRequirement} ({partlySupportedItems.length})</h3>
+                <ul>{partlySupportedItems.map((item) => {
+                  const source = evidence.find(({ line }) => String(line) === item.evidence);
+                  return (
+                    <li key={item.id} style={{ marginBlock: "0.5rem" }}>
+                      <strong>{item.title}</strong> · {item.required ? "Required" : "Preferred"}
+                      {source && <p style={{ margin: "0.2rem 0 0", color: "var(--muted)" }}>{source.section} · Line {source.line}: {source.excerpt}</p>}
+                    </li>
+                  );
+                })}</ul>
+              </div>
+            )}
+
+            {missingItems.length > 0 && (
+              <div>
+                <h3 style={{ color: "#a32a2a" }}>{copy.notInCv} ({missingItems.length})</h3>
+                <ul>{missingItems.map((item) => (
+                  <li key={item.id} style={{ marginBlock: "0.5rem" }}>
+                    <strong>{item.title}</strong> · {item.required ? "Required" : "Preferred"}
+                    <p style={{ margin: "0.2rem 0 0", color: "var(--muted)" }}>No supporting experience selected from your CV.</p>
+                  </li>
+                ))}</ul>
+              </div>
+            )}
+          </div>
+
           <CvSuggestions items={result.items} evidence={evidence} />
         </section>
       )}
