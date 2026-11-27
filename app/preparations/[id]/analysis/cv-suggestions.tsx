@@ -24,7 +24,7 @@ export function CvSuggestions({ items, evidence }: { items: Requirement[]; evide
             <fieldset className="fields" key={item.id}>
               <legend>{item.title}</legend>
               <label>
-                Related CV evidence for {item.title}
+                Related CV experience for {item.title}
                 <select value={line || ""} onChange={(event) => {
                   const value = Number(event.target.value);
                   setSelected((previous) => ({ ...previous, [item.id]: value }));

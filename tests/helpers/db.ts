@@ -37,11 +37,14 @@ export async function resetDatabase() {
   await client.connect();
   try {
     await client.query("DROP SCHEMA public CASCADE; CREATE SCHEMA public;");
-    // const migrationFile = path.resolve(__dirname, "../../migrations/0001_init.sql");
-    // const sql = fs.readFileSync(migrationFile, "utf-8");
-    const migrationFile = path.join(migrationsDir, "0001_init.sql");
-    const sql = fs.readFileSync(migrationFile, "utf-8");
-    await client.query(sql);
+    const migrationFiles = fs
+      .readdirSync(migrationsDir)
+      .filter((file) => file.endsWith(".sql"))
+      .sort();
+    for (const file of migrationFiles) {
+      const sql = fs.readFileSync(path.join(migrationsDir, file), "utf-8");
+      await client.query(sql);
+    }
   } finally {
     await client.end();
   }

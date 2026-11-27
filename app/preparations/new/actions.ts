@@ -19,7 +19,7 @@ export async function submitTargetJob(id: string, _: string, data: FormData) {
   try {
     await createPreparation(accountId, id, title, description);
   } catch {
-    return "The target job could not be saved. Try again.";
+    return "The job could not be saved. Try again.";
   }
   redirect(`/preparations/${id}/setup`);
 }

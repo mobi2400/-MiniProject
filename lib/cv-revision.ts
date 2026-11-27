@@ -1,5 +1,6 @@
 import { readCv } from "./cv";
 import type { Requirement } from "./cv-fit";
+import type { CvFormat } from "./cv-extract";
 import { one } from "./db";
 import { readTargetJob } from "./preparations";
 import { hasReadiness, readReassessments } from "./training";
@@ -31,9 +32,9 @@ export async function readCvRevision(account: string, id: string) {
 }
 
 export async function readCvSource(account: string, id: string, version: number) {
-  return await one<{ source: Uint8Array | Buffer }>(
+  return await one<{ source: Uint8Array | Buffer; format: CvFormat; filename: string }>(
     `
-    SELECT c.source FROM cv_versions c JOIN preparations p ON p.id = c.preparation_id
+    SELECT c.source, COALESCE(c.format, 'txt') as format, c.filename FROM cv_versions c JOIN preparations p ON p.id = c.preparation_id
     WHERE p.account_id = $1 AND p.id = $2 AND c.version = $3
     `,
     [account, id, version],

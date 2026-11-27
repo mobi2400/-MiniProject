@@ -2,13 +2,14 @@
   "compilerOptions": {
     "target": "ES2022",
     "module": "commonjs",
-    "moduleResolution": "node",
+    "moduleResolution": "node10",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "outDir": ".test-build"
   },
   "include": [
+    "types/**/*.d.ts",
     "lib/**/*.ts",
     "tests/**/*.ts"
   ],

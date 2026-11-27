@@ -2,6 +2,7 @@ import Link from "next/link";
 import { readCv } from "../../lib/cv";
 import { one } from "../../lib/db";
 import { suggestJobTitles } from "../../lib/job-search-titles";
+import { configuredBoards } from "../../lib/job-sources";
 import { requireAccount } from "../../lib/session";
 import { TitleForm } from "./title-form";
 import { SearchResults } from "./search-results";
@@ -29,9 +30,14 @@ export default async function Jobs() {
     <main className="shell form-page">
       <Link href="/dashboard">Your preparations</Link>
       <h1>Job search</h1>
-      <TitleForm initialTitles={stored ? JSON.parse(stored.titles_json) as string[] : []}
-        suggestions={suggestJobTitles(cv?.evidence ?? [])} />
-      <SearchResults key={stored?.titles_json ?? ""} />
+      <TitleForm
+        initialTitles={stored ? (JSON.parse(stored.titles_json) as string[]) : []}
+        suggestions={suggestJobTitles(cv?.evidence ?? [])}
+      />
+      <SearchResults
+        key={stored?.titles_json ?? ""}
+        hasConfiguredBoards={configuredBoards().length > 0}
+      />
     </main>
   );
 }

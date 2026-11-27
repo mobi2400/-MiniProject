@@ -1,9 +1,9 @@
 import Link from "next/link";
 
 const steps = [
-  ["Compare your CV", "See which job requirements your experience supports and where your CV needs clearer evidence."],
-  ["Practice for the role", "Get feedback on your answers and work through exercises that address the specific skills you missed."],
-  ["Review your revised CV", "Once you meet the preparation criteria, review the suggested changes and download a CV tailored to the role."],
+  ["Job & CV", "Save a job you're preparing for and upload your CV as a PDF, Word file, or .txt file."],
+  ["CV match", "See which requirements your experience supports and where your CV needs clearer evidence."],
+  ["Practice & Revised CV", "Complete skill checks with instant feedback and download a revised CV highlighting relevant experience."],
 ] as const;
 
 export default function Home() {
@@ -23,14 +23,26 @@ export default function Home() {
             <p className="label">Career preparation</p>
             <h1 id="hero-title">Prepare for the role you want.</h1>
             <p className="intro">Compare your CV with a job description, practice the skills that role requires, and build a revised CV backed by your experience.</p>
-            <a className="button" href="#how-it-works">See how it works</a>
+            
+            <div style={{ marginBlock: "1.25rem", padding: "1rem", background: "#f2effb", borderRadius: "0.5rem" }}>
+              <p style={{ margin: "0 0 0.5rem", fontWeight: 700 }}>Before you start, have ready:</p>
+              <ul style={{ margin: 0, paddingInlineStart: "1.25rem", color: "var(--muted)" }}>
+                <li>A job description you want to apply for</li>
+                <li>Your CV as a PDF, Word file, or .txt file</li>
+              </ul>
+            </div>
+
+            <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap", alignItems: "center" }}>
+              <Link className="button" href="/account?mode=register">Create free account</Link>
+              <Link className="button button-secondary" href="/account">Sign in</Link>
+            </div>
           </div>
           <aside className="example" aria-labelledby="example-title">
             <p className="label">Example preparation</p>
             <h2 id="example-title">Reporting Analyst Intern</h2>
             <dl>
               <div><dt>Job requirement</dt><dd>Build reports using SQL joins</dd></div>
-              <div><dt>CV evidence</dt><dd>Database project with grouped reports</dd></div>
+              <div><dt>Experience from your CV</dt><dd>Database project with grouped reports</dd></div>
               <div><dt>Next exercise</dt><dd>Keep categories with no sales in a report</dd></div>
             </dl>
           </aside>

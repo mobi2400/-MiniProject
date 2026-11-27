@@ -1,0 +1,5 @@
+Skills
+Python, SQL, TypeScript
+
+Experience
+Software Engineer at Acme Corp
