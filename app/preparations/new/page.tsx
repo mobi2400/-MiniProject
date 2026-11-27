@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { one } from "../../../lib/db";
 import { requireAccount } from "../../../lib/session";
+import { copy } from "../../../lib/copy";
 import { JobForm } from "./job-form";
 
 export default async function NewPreparation() {
@@ -12,7 +13,7 @@ export default async function NewPreparation() {
   return (
     <main className="shell form-page">
       <Link href="/dashboard">Your preparations</Link>
-      <h1>Add a target job</h1>
+      <h1>{copy.addJobTitle}</h1>
       <JobForm id={randomUUID()} />
     </main>
   );

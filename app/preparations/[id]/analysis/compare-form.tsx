@@ -73,7 +73,7 @@ export function CompareForm({ evidence, report, save, suggest }: {
               <option value="required">Required</option>
               <option value="preferred">Preferred</option>
             </select></label>
-            <label>CV evidence <select value={item.evidence}
+            <label>Experience from your CV <select value={item.evidence}
               onChange={(event) => update(item.id, { evidence: event.target.value })}>
               <option value="">No supporting evidence</option>
               {evidence.map((entry) => (
@@ -99,7 +99,7 @@ export function CompareForm({ evidence, report, save, suggest }: {
       </form>
       {result && (
         <section aria-label="Comparison result">
-          <h2 role="status">CV-fit estimate {result.score}%</h2>
+          <h2 role="status">How well your CV matches this job: {result.score}%</h2>
           <ul>{result.items.map((item) => {
             const source = evidence.find(({ line }) => String(line) === item.evidence);
             return (

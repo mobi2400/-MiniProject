@@ -30,7 +30,7 @@ export default function Home() {
             <h2 id="example-title">Reporting Analyst Intern</h2>
             <dl>
               <div><dt>Job requirement</dt><dd>Build reports using SQL joins</dd></div>
-              <div><dt>CV evidence</dt><dd>Database project with grouped reports</dd></div>
+              <div><dt>Experience from your CV</dt><dd>Database project with grouped reports</dd></div>
               <div><dt>Next exercise</dt><dd>Keep categories with no sales in a report</dd></div>
             </dl>
           </aside>

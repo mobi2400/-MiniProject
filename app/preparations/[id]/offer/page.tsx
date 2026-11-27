@@ -5,6 +5,7 @@ import { requireAccount } from "../../../../lib/session";
 import { readDiagnostic, readTrainingRequirements } from "../../../../lib/training";
 import { hasCoverage, qualifyingAttempts, readinessThreshold } from "../../../../lib/training-bank";
 import { startDiagnostic } from "../diagnostic/actions";
+import { copy } from "../../../../lib/copy";
 
 export default async function Offer({ params }: { params: Promise<{ id: string }> }) {
   const account = await requireAccount();
@@ -17,30 +18,30 @@ export default async function Offer({ params }: { params: Promise<{ id: string }
   return (
     <main className="shell form-page">
       <Link href={`/preparations/${id}/analysis`}>Back to CV comparison</Link>
-      <h1>Role coverage</h1>
+      <h1>{copy.roleCoverage}</h1>
       <h2>{job.title}</h2>
       {required.length ? (
         <>
           <ul>{required.map(({ id, title }) => (
-            <li key={id}>{title} · {hasCoverage(title) ? "Assessment material available" : "Required skill missing from the question bank"}</li>
+            <li key={id}>{title} · {hasCoverage(title) ? "Assessment material available" : copy.missingSkillPractice(title)}</li>
           ))}</ul>
-          {unsupported ? <p>Paid checkout is unavailable for this role because a required skill lacks coverage.</p> : (
+          {unsupported ? <p>Some required skills do not have practice available yet. You can still use the other steps.</p> : (
             <section aria-labelledby="preparation-terms">
               <h2 id="preparation-terms">Preparation terms</h2>
-              <p>The pilot plan includes a diagnostic, guided practice, and independent reassessments for the skills above.</p>
-              <p>The revised CV becomes available after {qualifyingAttempts} consecutive independent reassessments achieve at least {readinessThreshold}% overall and in each required skill.</p>
-              <p>This preview is free. Paid checkout is pending.</p>
+              <p>The pilot plan includes a starting skill check, guided practice, and skill checks for the skills above.</p>
+              <p>The revised CV becomes available after {qualifyingAttempts} consecutive skill checks achieve at least {readinessThreshold}% overall and in each required skill.</p>
+              <p>{copy.practiceFreeDuringPilot}</p>
               {diagnostic ? (
-                <Link href={`/preparations/${id}/diagnostic`}>{diagnostic.submittedAt ? "View diagnostic feedback" : "Resume diagnostic"}</Link>
+                <Link href={`/preparations/${id}/diagnostic`}>{diagnostic.submittedAt ? "View skill check feedback" : copy.resumeDiagnostic}</Link>
               ) : (
                 <form className="fields" action={startDiagnostic.bind(null, id)}>
-                  <button className="button">Start free diagnostic</button>
+                  <button className="button">{copy.startDiagnostic}</button>
                 </form>
               )}
             </section>
           )}
         </>
-      ) : <p>Save a comparison with at least one required skill to see coverage.</p>}
+      ) : <p>{copy.compareFirstPrompt}</p>}
     </main>
   );
 }

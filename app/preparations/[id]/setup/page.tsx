@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { readCv } from "../../../../lib/cv";
 import { readListingSnapshot, readTargetJob } from "../../../../lib/preparations";
 import { requireAccount } from "../../../../lib/session";
+import { copy } from "../../../../lib/copy";
 import { CvForm } from "./cv-form";
 import { EvidenceForm } from "./evidence-form";
 import { ListingStatus } from "./listing-status";
@@ -23,12 +24,12 @@ export default async function PreparationSetup({ params }: { params: Promise<{ i
       <h2>Saved job description</h2>
       <p className="saved-description">{job.description}</p>
       <p><Link href={`/preparations/${id}/delete`}>Delete preparation</Link></p>
-      <h2>CV evidence</h2>
+      <h2>{copy.cvEvidence}</h2>
       <CvForm preparationId={id} />
       {cv && (
-        <section aria-label="Extracted CV evidence">
+        <section aria-label="Extracted CV experience">
           <Link className="button" href={`/preparations/${id}/analysis`}>Compare CV with this job</Link>
-          <p role="status">Saved {cv.filename}, version {cv.version}.</p>
+          <p role="status">{copy.savedCvNote(cv.filename)}</p>
           <p><a href={`/preparations/${id}/cv-download?version=${cv.version}`}>Download original CV</a></p>
           <ul>{cv.evidence.map(({ section, excerpt, line }) => (
             <li key={line}>

@@ -13,7 +13,7 @@ export function JobForm({ id }: { id: string }) {
       <label>Job description <textarea name="description" required maxLength={20000} rows={8} value={description} onChange={(event) => setDescription(event.target.value)} /></label>
       <p>Include the responsibilities and requirements from the posting.</p>
       {error && <p role="alert">{error}</p>}
-      <button className="button" disabled={pending}>{pending ? "Saving…" : "Save target job"}</button>
+      <button className="button" disabled={pending}>{pending ? "Saving…" : "Save job and continue"}</button>
     </form>
   );
 }

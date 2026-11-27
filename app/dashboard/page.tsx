@@ -6,6 +6,8 @@ import { hasReadiness, readDiagnostic, readReassessments, readTrainingRequiremen
 import { hasCoverage } from "../../lib/training-bank";
 import { signOut } from "../account/actions";
 
+import { copy } from "../../lib/copy";
+
 export default async function Dashboard({ searchParams }: { searchParams: Promise<{ role?: string }> }) {
   const accountId = await requireAccount();
   const profile = await one("SELECT 1 FROM profiles WHERE account_id = $1", [accountId]);
@@ -43,28 +45,28 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
     const covered = required.length > 0 && required.every(({ title }) => hasCoverage(title));
     const ready = covered && hasReadiness(attempts);
     let action = { label: "Upload your CV", path: "setup" };
-    if (latest?.score === null) action = { label: "Resume reassessment", path: "reassessment" };
-    else if (diagnostic?.submittedAt === null) action = { label: "Resume diagnostic", path: "diagnostic" };
+    if (latest?.score === null) action = { label: copy.resumeReassessment, path: "reassessment" };
+    else if (diagnostic?.submittedAt === null) action = { label: copy.resumeDiagnostic, path: "diagnostic" };
     else if (ready) action = { label: "Review revised CV", path: "revised-cv" };
     else if (cv && !comparison) action = { label: "Compare your CV", path: "analysis" };
-    else if (comparison && (!covered || !diagnostic)) action = { label: "View role coverage", path: "offer" };
-    else if (diagnostic?.submittedAt && latest) action = { label: "Review reassessment", path: "reassessment" };
-    else if (diagnostic?.submittedAt) action = { label: "Review diagnostic and practice", path: "diagnostic" };
+    else if (comparison && (!covered || !diagnostic)) action = { label: "View practice available", path: "offer" };
+    else if (diagnostic?.submittedAt && latest) action = { label: copy.reviewReassessment, path: "reassessment" };
+    else if (diagnostic?.submittedAt) action = { label: "Review skill check and practice", path: "diagnostic" };
 
     return (
       <section className="role-progress" aria-labelledby="selected-role">
         <h2 id="selected-role">{role.title}</h2>
-        <p>{ready ? "Readiness criteria met" : "Preparation in progress"}</p>
+        <p>{ready ? copy.readinessMet : copy.inProgress}</p>
         <Link className="button" href={`${base}/${action.path}`}>{action.label}</Link>
         <dl className="dashboard-scores">
-          <div><dt>CV-fit estimate</dt><dd>{comparison ? `${comparison.score}%` : "Comparison pending"}</dd></div>
-          <div><dt>SQL joins assessment</dt><dd>{scored ? `${scored.score}% · Reassessment` :
-            diagnostic?.score != null ? `${diagnostic.score}% · Diagnostic` : "Untested"}</dd></div>
+          <div><dt>{copy.cvFitEstimate}</dt><dd>{comparison ? `${comparison.score}%` : "Comparison pending"}</dd></div>
+          <div><dt>SQL joins assessment</dt><dd>{scored ? `${scored.score}% · ${copy.reassessment}` :
+            diagnostic?.score != null ? `${diagnostic.score}% · ${copy.diagnostic}` : copy.untested}</dd></div>
         </dl>
         <nav className="header-links" aria-label="Selected preparation">
           <Link href={`${base}/setup`}>Preparation setup</Link>
-          {diagnostic?.submittedAt && <Link href={`${base}/diagnostic`}>Diagnostic feedback</Link>}
-          {latest && latest.score !== null && <Link href={`${base}/reassessment`}>Reassessment feedback</Link>}
+          {diagnostic?.submittedAt && <Link href={`${base}/diagnostic`}>{copy.diagnosticFeedback}</Link>}
+          {latest && latest.score !== null && <Link href={`${base}/reassessment`}>{copy.reassessmentFeedback}</Link>}
         </nav>
       </section>
     );
@@ -75,14 +77,14 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
       <Link href="/">MiniProject</Link>
       <h1>Your preparations</h1>
       <p><Link href="/jobs">Job search</Link></p>
-      {profile ? <Link className="button" href="/preparations/new">Add a target job</Link> : <Link href="/profile">Complete your profile</Link>}
+      {profile ? <Link className="button" href="/preparations/new">{copy.addJobTitle}</Link> : <Link href="/profile">Complete your profile</Link>}
       {preparations.length ? (
         <nav aria-label="Select a role">
           <ul>{preparations.map(({ id, title }) => (
             <li key={id}><Link href={`/dashboard?role=${encodeURIComponent(id)}`} aria-current={role?.id === id ? "page" : undefined}>{title}</Link></li>
           ))}</ul>
         </nav>
-      ) : <p>Your saved jobs will appear here.</p>}
+      ) : <p>{copy.noJobsYet}</p>}
       {await renderProgress()}
       <form action={signOut}><button className="text-button">Sign out</button></form>
     </main>
