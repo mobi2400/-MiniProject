@@ -351,3 +351,12 @@ commands or commit references when they help someone reproduce the result.
 - Added comprehensive integration test suite (tests/database.test.ts, tests/helpers/db.ts, tsconfig.test.json) covering 12 critical behavioral and concurrency guarantees.
 - Removed DATABASE_PATH and configured .env.example, .gitignore, and docs/database.md for Neon pooled/unpooled connection strings and Vercel deployments.
 - Verified TypeScript compilation (npm run typecheck), linting (npm run lint), and production build (npm run build) all passing cleanly.
+
+2026-11-28 | Multi-format CV support, Tavily job discovery, accessibility polish, and verification
+- Added multi-format CV ingestion and export supporting TXT, PDF (pdf-parse), and DOCX (mammoth) uploads with file signature, size (>5MB), and corruption validation, plus format-preserving download endpoints.
+- Added Tavily-powered live job discovery (lib/tavily-jobs.ts, migrations/0003_job_discovery.sql) with normalized query caching, HTTPS URL filtering, URL deduplication, result sanitization, and a 20-search daily per-account quota.
+- Applied database migrations 0001_init.sql through 0003_job_discovery.sql against Neon Postgres.
+- Completed accessibility and responsive layout improvements across application routes, including skip-to-content links, id="main-content" landmarks, and mobile CSS adjustments.
+- Expanded automated test coverage to 22 tests across three suites (CV multi-format extraction & download, Postgres integration, and Tavily job discovery in tests/tavily-jobs.test.ts).
+- Verified all 7 CV extraction/download tests and all 3 Tavily discovery tests pass (alongside the 12 Postgres integration tests, noting occasional remote Neon socket timeouts when running all suites sequentially).
+- Next: run final npm run lint and npm run build checks, merge to main, deploy to production on Vercel, and perform live smoke testing.
