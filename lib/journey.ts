@@ -25,12 +25,13 @@ export const STAGES = [
   { step: 5, name: "Revised CV" },
 ] as const;
 
+// Each step is "current" only while its work is still missing.
+// Saving a job completes step 1, uploading a CV completes step 2, saving a match completes step 3.
 export async function getStage(accountId: string, preparationId: string): Promise<JourneyStage> {
   const base = `/preparations/${preparationId}`;
   const job = await readTargetJob(accountId, preparationId);
   const cv = await readCv(accountId, preparationId);
 
-  // Default stage 1 if no job exists yet or only job exists without CV
   if (!job) {
     return {
       step: 1,
@@ -41,14 +42,13 @@ export async function getStage(accountId: string, preparationId: string): Promis
 
   if (!cv) {
     return {
-      step: 1,
-      name: "Job description",
+      step: 2,
+      name: "Your CV",
       nextAction: { label: "Next: Upload your CV", href: `${base}/setup` },
       backAction: { label: "Back to preparations", href: "/dashboard" },
     };
   }
 
-  // Check if comparison exists
   const comparison = await one<{ score: number }>(
     `SELECT score FROM cv_comparisons WHERE preparation_id = $1 AND cv_version = $2 AND job_version = $3`,
     [preparationId, cv.version, job.version],
@@ -56,14 +56,13 @@ export async function getStage(accountId: string, preparationId: string): Promis
 
   if (!comparison) {
     return {
-      step: 2,
-      name: "Your CV",
+      step: 3,
+      name: "CV match",
       nextAction: { label: "Next: Compare your CV", href: `${base}/analysis` },
-      backAction: { label: "Back to job details", href: `${base}/setup` },
+      backAction: { label: "Back to your CV", href: `${base}/setup` },
     };
   }
 
-  // Check practice and readiness
   const diagnostic = await readDiagnostic(accountId, preparationId, job.version);
   const attempts = await readReassessments(accountId, preparationId, job.version);
   const required = await readTrainingRequirements(accountId, preparationId, job.version);
@@ -92,9 +91,9 @@ export async function getStage(accountId: string, preparationId: string): Promis
   }
 
   return {
-    step: 3,
-    name: "CV match",
+    step: 4,
+    name: "Skill practice",
     nextAction: { label: "Next: View practice available", href: `${base}/offer` },
-    backAction: { label: "Back to CV experience", href: `${base}/setup` },
+    backAction: { label: "Back to CV match", href: `${base}/analysis` },
   };
 }

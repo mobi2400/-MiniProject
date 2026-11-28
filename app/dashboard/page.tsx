@@ -12,7 +12,7 @@ const nextStepReason: Record<number, string> = {
   1: "Save the job description and upload your CV so we can compare them.",
   2: "Compare your CV with this job to see which skills it supports.",
   3: "Start the skill check to find out which skills need practice.",
-  4: "Keep practicing until you get two correct skill checks in a row.",
+  4: "Practice the skills this job needs. Two correct skill checks in a row unlock your revised CV.",
   5: "Your revised CV is ready to review and download.",
 };
 

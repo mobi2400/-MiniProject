@@ -11,6 +11,7 @@ import { JourneyBar } from "../../../../components/JourneyBar";
 import { CompareForm } from "./compare-form";
 import { saveComparison, suggestComparison } from "./actions";
 import { KeywordCoverage } from "./keyword-coverage";
+import { suggestRequirements } from "../../../../lib/requirement-suggestions";
 
 export default async function Analysis({ params }: { params: Promise<{ id: string }> }) {
   const account = await requireAccount();
@@ -57,7 +58,8 @@ export default async function Analysis({ params }: { params: Promise<{ id: strin
 
           <CompareForm key={`${id}:${job.version}:${cv.version}`} evidence={cv.evidence}
             report={report} save={saveComparison.bind(null, id, cv.version, job.version)}
-            suggest={comparisonConfig() ? suggestComparison.bind(null, id, cv.version, job.version) : undefined} />
+            suggest={comparisonConfig() ? suggestComparison.bind(null, id, cv.version, job.version) : undefined}
+            suggestions={suggestRequirements(job.description)} />
         </>
       ) : <p>Upload a CV in preparation setup to compare it with this job.</p>}
 

@@ -10,11 +10,12 @@ type Report = { items: Requirement[]; score: number | null };
 
 const firstRequirement: Requirement = { id: 1, title: "", required: true, evidence: "", partial: false };
 
-export function CompareForm({ evidence, report, save, suggest }: {
+export function CompareForm({ evidence, report, save, suggest, suggestions = [] }: {
   evidence: CvEvidence[];
   report?: Report;
   save: (items: Requirement[]) => Promise<{ error?: string; report?: Report }>;
   suggest?: () => Promise<{ error?: string; items?: Requirement[] }>;
+  suggestions?: string[];
 }) {
   const [items, setItems] = useState(report?.items ?? [firstRequirement]);
   const [result, setResult] = useState(report);
@@ -22,6 +23,25 @@ export function CompareForm({ evidence, report, save, suggest }: {
   const [pending, startTransition] = useTransition();
   const [suggesting, startSuggestion] = useTransition();
   const busy = pending || suggesting;
+  const [picked, setPicked] = useState<string[]>([]);
+
+  // Adds the ticked requirements as rows; the empty starter row is replaced, and duplicates are skipped.
+  function addPicked() {
+    const existing = new Set(items.map(({ title }) => title.trim().toLowerCase()));
+    const fresh = picked.filter((text) => !existing.has(text.trim().toLowerCase()));
+    const kept = items.filter((item) => item.title.trim() !== "" || items.length > 1);
+    let nextId = Math.max(0, ...items.map(({ id }) => id)) + 1;
+    const added: Requirement[] = fresh.map((title) => ({
+      id: nextId++,
+      title,
+      required: !/preferred|nice to have|bonus/iu.test(title),
+      evidence: "",
+      partial: false,
+    }));
+    setItems([...kept, ...added].slice(0, 30));
+    setPicked([]);
+    setResult(undefined);
+  }
 
   function update(id: number, patch: Partial<Requirement>) {
     setItems(items.map((item) => item.id === id ? { ...item, ...patch } : item));
@@ -55,6 +75,38 @@ export function CompareForm({ evidence, report, save, suggest }: {
           }}>{suggesting ? "Generating draft…" : "Draft comparison with OpenAI"}</button>
         </section>
       )}
+      {suggestions.length > 0 && (
+        <section className="card" aria-labelledby="suggestions-heading">
+          <h2 id="suggestions-heading" className="card-title">Requirements found in this job description</h2>
+          <p className="list-row-meta">Tick the ones you want to compare. Each one is added as a required item, and you can change its priority afterwards.</p>
+          <ul className="list">
+            {suggestions.map((text) => (
+              <li key={text} className="list-row">
+                <label className="option">
+                  <input
+                    type="checkbox"
+                    checked={picked.includes(text)}
+                    disabled={busy}
+                    onChange={(event) =>
+                      setPicked(event.target.checked ? [...picked, text] : picked.filter((entry) => entry !== text))
+                    }
+                  />
+                  <span>{text}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+          <button
+            type="button"
+            className="button-secondary checklist-add"
+            disabled={busy || picked.length === 0 || items.length >= 30}
+            onClick={addPicked}
+          >
+            {picked.length ? `Add ${picked.length} selected requirement${picked.length === 1 ? "" : "s"}` : "Add selected requirements"}
+          </button>
+        </section>
+      )}
+
       <form className="fields" onSubmit={(event) => {
         event.preventDefault();
         setError("");
