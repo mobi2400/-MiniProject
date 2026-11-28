@@ -73,7 +73,7 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
   }
 
   return (
-    <main className="shell form-page dashboard">
+    <main className="shell form-page dashboard" id="main-content">
       <Link href="/">MiniProject</Link>
       <h1>Your preparations</h1>
 

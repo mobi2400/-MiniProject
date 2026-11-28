@@ -17,7 +17,7 @@ export default function Home() {
           <Link href="/account">Sign in</Link>
         </nav>
       </header>
-      <main id="main">
+      <main id="main-content">
         <section className="shell hero" aria-labelledby="hero-title">
           <div>
             <p className="label">Career preparation</p>

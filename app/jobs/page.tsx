@@ -27,7 +27,7 @@ export default async function Jobs() {
   );
   const cv = latest && (await readCv(account, latest.id));
   return (
-    <main className="shell form-page">
+    <main className="shell form-page" id="main-content">
       <Link href="/dashboard">Your preparations</Link>
       <h1>Job search</h1>
       <TitleForm
