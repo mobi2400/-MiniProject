@@ -1,8 +1,12 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { currentAccountId } from "../../lib/session";
 import { AccountForm } from "./account-form";
 
 export default async function Account({ searchParams }: { searchParams: Promise<{ mode?: string }> }) {
   const register = (await searchParams).mode === "register";
+  // Already signed in: send them to their profile instead of showing the form.
+  if (await currentAccountId()) redirect("/profile");
   return (
     <main className="auth-page" id="main-content">
       <section className="auth-card" aria-labelledby="auth-title">
