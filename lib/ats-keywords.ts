@@ -25,3 +25,5 @@ export function analyzeKeywords(description: string, evidence: CvEvidence[]) {
   const covered = keywords.filter(({ source }) => source !== null).length;
   return { keywords, covered, estimate: keywords.length ? Math.round(100 * covered / keywords.length) : null };
 }
+
+export { catalog as skillCatalog };

@@ -31,6 +31,8 @@ export const copy = {
   practiceFreeDuringPilot: "Practice is free during the pilot.",
   missingSkillPractice: (skill: string) => `We don't have practice for ${skill} yet. You can still use the other steps.`,
   roleCoverage: "Practice available",
+  someSkillsNoPractice: "Some skills don't have practice yet. You can still complete the other steps.",
+  practiceHowItWorks: "How practice works",
 
   // Readiness & status
   readinessMet: "Ready to download your revised CV",

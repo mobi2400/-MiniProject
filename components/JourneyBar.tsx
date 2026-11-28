@@ -12,7 +12,7 @@ export function JourneyBar({
     1: `/preparations/${preparationId}/setup`,
     2: `/preparations/${preparationId}/setup`,
     3: `/preparations/${preparationId}/analysis`,
-    4: `/preparations/${preparationId}/diagnostic`,
+    4: `/preparations/${preparationId}/reassessment`,
     5: `/preparations/${preparationId}/revised-cv`,
   };
 
@@ -28,20 +28,26 @@ export function JourneyBar({
         {STAGES.map((s) => {
           const isDone = s.step < currentStep;
           const isCurrent = s.step === currentStep;
-          const link = stageLinks[s.step];
+          const isLocked = s.step > currentStep;
+          const label = isDone ? `Completed: ${s.name}` : isLocked ? `${s.name} · Not yet` : s.name;
+          const content = (
+            <>
+              <span className="step-badge">{isDone ? "✓" : s.step}</span>
+              <span className="step-label">{label}</span>
+            </>
+          );
 
           return (
             <li
               key={s.step}
-              className={`journey-step ${isDone ? "is-done" : ""} ${isCurrent ? "is-current" : ""}`}
+              className={`journey-step ${isDone ? "is-done" : ""} ${isCurrent ? "is-current" : ""} ${isLocked ? "is-locked" : ""}`}
               aria-current={isCurrent ? "step" : undefined}
             >
-              <Link href={link}>
-                <span className="step-badge">{isDone ? "✓" : s.step}</span>
-                <span className="step-label">
-                  {isDone ? `Completed: ${s.name}` : s.name}
-                </span>
-              </Link>
+              {isDone ? (
+                <Link href={stageLinks[s.step]}>{content}</Link>
+              ) : (
+                <span className="journey-static">{content}</span>
+              )}
             </li>
           );
         })}
