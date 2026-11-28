@@ -8,7 +8,7 @@ export function ProfileForm({ name, goal }: { name: string; goal: string }) {
   const [displayName, setDisplayName] = useState(name);
   const [careerGoal, setCareerGoal] = useState(goal);
   return (
-    <form action={action} className="fields">
+    <form action={action} className="fields profile-form">
       <label>Name <input name="name" value={displayName} onChange={(event) => setDisplayName(event.target.value)} autoComplete="name" maxLength={100} required /></label>
       <label>Career goal (optional) <input name="careerGoal" value={careerGoal} onChange={(event) => setCareerGoal(event.target.value)} maxLength={200} /></label>
       {message && <p role={message === "Profile saved." ? "status" : "alert"}>{message}</p>}

@@ -51,6 +51,16 @@ export async function readSession(): Promise<{ accountId: string; id: string } |
   }
 }
 
+export async function currentAccountId(): Promise<string | null> {
+  const session = await readSession();
+  if (!session) return null;
+  const active = await one<{ id: string }>(
+    "SELECT id FROM sessions WHERE id = $1 AND account_id = $2 AND expires_at > $3",
+    [session.id, session.accountId, Math.floor(Date.now() / 1000)],
+  );
+  return active ? session.accountId : null;
+}
+
 export async function requireAccount(): Promise<string> {
   const session = await readSession();
   const active =

@@ -4,20 +4,26 @@ import { AccountForm } from "./account-form";
 export default async function Account({ searchParams }: { searchParams: Promise<{ mode?: string }> }) {
   const register = (await searchParams).mode === "register";
   return (
-    <main className="shell form-page" id="main-content">
-      <Link href="/">MiniProject</Link>
-      <h1>{register ? "Create an account" : "Sign in"}</h1>
-      
-      <div style={{ marginBlock: "1rem" }}>
-        <p>
-          {register ? "Already have an account? " : "New here? "}
-          <Link href={register ? "/account" : "/account?mode=register"} style={{ fontWeight: 700, color: "var(--indigo)" }}>
-            {register ? "Sign in." : "Create an account."}
-          </Link>
+    <main className="auth-page" id="main-content">
+      <section className="auth-card" aria-labelledby="auth-title">
+        <p className="kicker">{register ? "Get started" : "Welcome back"}</p>
+        <h1 id="auth-title">{register ? "Create your account" : "Sign in"}</h1>
+        <p className="auth-lead">
+          {register
+            ? "Save your jobs and CV, and pick up where you left off."
+            : "Continue your career preparation."}
         </p>
-      </div>
 
-      <AccountForm key={String(register)} register={register} />
+        <nav className="segmented" aria-label="Account">
+          <Link href="/account" aria-current={register ? undefined : "page"}>Sign in</Link>
+          <Link href="/account?mode=register" aria-current={register ? "page" : undefined}>Create account</Link>
+        </nav>
+
+        <AccountForm key={String(register)} register={register} />
+      </section>
+      <p className="auth-footer-note">
+        <Link href="/">Back to home</Link>
+      </p>
     </main>
   );
 }
