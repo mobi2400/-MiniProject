@@ -29,7 +29,7 @@ export default async function PreparationSetup({ params }: { params: Promise<{ i
     : {};
 
   return (
-    <main className="shell form-page">
+    <main className="shell form-page" id="main-content">
       <Link href="/dashboard">Your preparations</Link>
       
       <JourneyBar currentStep={stage.step} preparationId={id} />

@@ -11,7 +11,7 @@ export default async function NewPreparation() {
   const profile = await one("SELECT 1 FROM profiles WHERE account_id = $1", [accountId]);
   if (!profile) redirect("/profile");
   return (
-    <main className="shell form-page">
+    <main className="shell form-page" id="main-content">
       <Link href="/dashboard">Your preparations</Link>
       <h1>{copy.addJobTitle}</h1>
       <JobForm id={randomUUID()} />

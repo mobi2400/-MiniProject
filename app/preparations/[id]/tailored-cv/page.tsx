@@ -25,7 +25,7 @@ export default async function TailoredCv({ params, searchParams }: {
     JSON.stringify(draft.edits) === JSON.stringify(currentEdits);
   const failed = (await searchParams).changed === "1";
   return (
-    <main className="shell form-page">
+    <main className="shell form-page" id="main-content">
       <Link href={`${base}/analysis`}>Back to CV comparison</Link>
       <h1>Tailored CV draft</h1>
       <p>{job.title} · {listing.company}</p>

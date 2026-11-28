@@ -4,7 +4,7 @@ import { AccountForm } from "./account-form";
 export default async function Account({ searchParams }: { searchParams: Promise<{ mode?: string }> }) {
   const register = (await searchParams).mode === "register";
   return (
-    <main className="shell form-page">
+    <main className="shell form-page" id="main-content">
       <Link href="/">MiniProject</Link>
       <h1>{register ? "Create an account" : "Sign in"}</h1>
       

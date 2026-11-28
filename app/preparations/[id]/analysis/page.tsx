@@ -34,7 +34,7 @@ export default async function Analysis({ params }: { params: Promise<{ id: strin
   const report = stored && { items: JSON.parse(stored.items_json) as Requirement[], score: stored.score };
 
   return (
-    <main className="shell form-page">
+    <main className="shell form-page" id="main-content">
       <Link href={`/preparations/${id}/setup`}>Back to preparation</Link>
 
       <JourneyBar currentStep={stage.step} preparationId={id} />
