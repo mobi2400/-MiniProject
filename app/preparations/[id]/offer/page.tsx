@@ -20,7 +20,7 @@ export default async function Offer({ params }: { params: Promise<{ id: string }
   const stage = await getStage(account, id);
 
   return (
-    <main className="shell form-page">
+    <main className="shell form-page" id="main-content">
       <Link href={`/preparations/${id}/analysis`}>Back to CV match</Link>
 
       <JourneyBar currentStep={stage.step} preparationId={id} />

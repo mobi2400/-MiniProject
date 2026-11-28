@@ -22,7 +22,7 @@ export default async function Diagnostic({ params, searchParams }: {
   const question = attempt.question;
 
   return (
-    <main className="shell form-page">
+    <main className="shell form-page" id="main-content">
       <Link href={`/preparations/${id}/offer`}>Back to role coverage</Link>
 
       <JourneyBar currentStep={stage.step} preparationId={id} />

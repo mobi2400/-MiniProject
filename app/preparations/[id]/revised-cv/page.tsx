@@ -16,7 +16,7 @@ export default async function RevisedCv({ params }: { params: Promise<{ id: stri
   const stage = await getStage(account, id);
 
   return (
-    <main className="shell form-page">
+    <main className="shell form-page" id="main-content">
       <Link href={`/preparations/${id}/reassessment`}>Back to skill checks</Link>
 
       <JourneyBar currentStep={stage.step} preparationId={id} />

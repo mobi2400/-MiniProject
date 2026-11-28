@@ -32,7 +32,7 @@ export default async function Reassessment({ params }: { params: Promise<{ id: s
   }
 
   return (
-    <main className="shell form-page">
+    <main className="shell form-page" id="main-content">
       <Link href={`/preparations/${id}/diagnostic`}>Back to skill check and practice</Link>
 
       <JourneyBar currentStep={stage.step} preparationId={id} />

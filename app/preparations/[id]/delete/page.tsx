@@ -13,7 +13,7 @@ export default async function DeletePreparation({ params, searchParams }: {
   const job = await readTargetJob(account, id);
   if (!job) notFound();
   return (
-    <main className="shell form-page">
+    <main className="shell form-page" id="main-content">
       <Link href={`/preparations/${id}/setup`}>Back to preparation</Link>
       <h1>Delete preparation</h1>
       <h2>{job.title}</h2>

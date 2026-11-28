@@ -12,7 +12,7 @@ export default async function Profile() {
   );
 
   return (
-    <main className="shell form-page">
+    <main className="shell form-page" id="main-content">
       <Link href="/">MiniProject</Link>
       <h1>Candidate profile</h1>
       <ProfileForm name={profile?.name ?? ""} goal={profile?.career_goal ?? ""} />
