@@ -31,35 +31,48 @@ export default async function PreparationSetup({ params }: { params: Promise<{ i
   return (
     <main className="shell form-page" id="main-content">
       <Link href="/dashboard">Your preparations</Link>
-      
+
       <JourneyBar currentStep={stage.step} preparationId={id} />
 
       <h1>{job.title}</h1>
 
-      <section aria-labelledby="job-details-heading" style={{ marginBlock: "1.5rem" }}>
-        <h2 id="job-details-heading">Job details</h2>
-        {listing && <p>{listing.company} · {listing.location} · <a href={listing.url} target="_blank" rel="noopener noreferrer">Original posting</a></p>}
+      <section aria-labelledby="job-details-heading" className="card">
+        <h2 className="card-title" id="job-details-heading">Job details</h2>
+        {listing && (
+          <p>
+            {listing.company} · {listing.location} ·{" "}
+            <a href={listing.url} target="_blank" rel="noopener noreferrer">
+              Original posting
+            </a>
+          </p>
+        )}
         {listing && <ListingStatus id={id} status={listing.status} />}
-        <p className="saved-description" style={{ marginBlock: "0.75rem", color: "var(--muted)" }}>{job.description}</p>
+        <p className="saved-description list-row-meta">{job.description}</p>
       </section>
 
-      <section aria-labelledby="cv-details-heading" style={{ marginBlock: "1.5rem", borderTop: "1px solid var(--line)", paddingTop: "1.5rem" }}>
-        <h2 id="cv-details-heading">Your CV</h2>
+      <section aria-labelledby="cv-details-heading" className="card">
+        <h2 className="card-title" id="cv-details-heading">Your CV</h2>
         <CvForm preparationId={id} />
         {cv && (
-          <div style={{ marginBlock: "1rem" }}>
-            <p role="status" style={{ fontWeight: 600 }}>{copy.savedCvNote(cv.filename)}</p>
-            <p><a href={`/preparations/${id}/cv-download?version=${cv.version}`}>Download original CV</a></p>
-            
-            <h3 style={{ marginBlock: "1rem 0.5rem" }}>Extracted experience grouped by section</h3>
-            <div style={{ display: "grid", gap: "1.25rem" }}>
+          <div className="stack">
+            <p role="status">
+              <strong>{copy.savedCvNote(cv.filename)}</strong>
+            </p>
+            <p>
+              <a href={`/preparations/${id}/cv-download?version=${cv.version}`}>Download original CV</a>
+            </p>
+
+            <h3 className="card-title">Extracted experience grouped by section</h3>
+            <div className="stack">
               {Object.entries(groupedEvidence).map(([sectionName, lines]) => (
-                <div key={sectionName} style={{ background: "white", border: "1px solid var(--line)", borderRadius: "0.5rem", padding: "1rem" }}>
-                  <h4 style={{ margin: "0 0 0.5rem", color: "var(--indigo)" }}>{sectionName}</h4>
-                  <ul style={{ margin: 0, paddingInlineStart: "1.25rem" }}>
+                <div key={sectionName} className="card">
+                  <h4 className="card-title">{sectionName}</h4>
+                  <ul className="stack">
                     {lines.map(({ excerpt, line, section }) => (
-                      <li key={line} style={{ marginBlock: "0.4rem" }}>
-                        <span>Line {line}: {excerpt}</span>
+                      <li key={line}>
+                        <span>
+                          Line {line}: {excerpt}
+                        </span>
                         <EvidenceForm preparationId={id} version={cv.version} line={line} section={section} />
                       </li>
                     ))}
@@ -68,7 +81,7 @@ export default async function PreparationSetup({ params }: { params: Promise<{ i
               ))}
             </div>
 
-            <div style={{ marginTop: "1.5rem" }}>
+            <div>
               <Link className="button" href={`/preparations/${id}/analysis`}>
                 Compare CV with this job
               </Link>
@@ -77,12 +90,12 @@ export default async function PreparationSetup({ params }: { params: Promise<{ i
         )}
       </section>
 
-      <section aria-labelledby="delete-heading" style={{ marginBlock: "2.5rem 1rem", borderTop: "1px solid var(--line)", paddingTop: "1.5rem" }}>
-        <h2 id="delete-heading" style={{ fontSize: "1.25rem", color: "#a32a2a" }}>Delete this preparation</h2>
-        <p style={{ color: "var(--muted)", fontSize: "0.9rem" }}>
+      <section aria-labelledby="delete-heading" className="danger-zone">
+        <h2 className="card-title" id="delete-heading">Delete this preparation</h2>
+        <p className="list-row-meta">
           Need to remove this role? You can permanently delete this preparation, its CV versions, comparisons, and practice results.
         </p>
-        <Link href={`/preparations/${id}/delete`} style={{ color: "#a32a2a", fontWeight: 600 }}>
+        <Link href={`/preparations/${id}/delete`}>
           Delete preparation…
         </Link>
       </section>
@@ -92,7 +105,9 @@ export default async function PreparationSetup({ params }: { params: Promise<{ i
           <Link href={stage.backAction.href} className="text-button">
             ← {stage.backAction.label}
           </Link>
-        ) : <div />}
+        ) : (
+          <div />
+        )}
         <Link href={stage.nextAction.href} className="button">
           {stage.nextAction.label} →
         </Link>

@@ -11,6 +11,25 @@
   --success: #1f6330;
   --danger: #9e1c28;
   --danger-bg: #fdf2f3;
+
+  /* Surfaces and borders */
+  --panel: #ffffff;
+  --panel-muted: #f7f6fc;
+  --border: #dcdaec;
+  --border-strong: #8b88a3;
+  --radius-card: 0.75rem;
+  --radius-control: 0.45rem;
+  --space-card: clamp(1rem, 3vw, 1.5rem);
+  --shadow-card: 0 1px 2px rgba(23, 23, 52, 0.06), 0 2px 8px rgba(23, 23, 52, 0.04);
+  --focus-ring: 0 0 0 4px rgba(71, 53, 181, 0.18);
+
+  /* Status tones: always paired with text */
+  --status-ok-bg: #e8f4ec;
+  --status-ok-ink: #1f6330;
+  --status-warn-bg: #fdf4e3;
+  --status-warn-ink: #7a4a00;
+  --status-todo-bg: #eeebfc;
+  --status-todo-ink: #35268a;
 }
 
 *,
@@ -32,6 +51,19 @@ body {
 
 a {
   color: inherit;
+}
+
+/* In-content links look like links (buttons and the brand keep their own styles) */
+main :where(a):not(.button, .text-button, .brand, .skip) {
+  color: var(--indigo);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  text-decoration-thickness: 1px;
+}
+
+main :where(a):not(.button, .text-button, .brand, .skip):hover {
+  color: var(--indigo-dark);
+  text-decoration-thickness: 2px;
 }
 
 :focus-visible {
@@ -157,9 +189,9 @@ h2 {
 }
 
 .button-secondary {
-  background: white;
+  background: var(--panel);
   color: var(--indigo);
-  border: 2px solid var(--indigo);
+  border: 1.5px solid var(--indigo);
 }
 
 .button-secondary:hover:not(:disabled) {
@@ -235,7 +267,7 @@ h2 {
 }
 
 .form-page {
-  max-width: 38rem;
+  max-width: 46rem;
   padding-block: 2rem 3rem;
 }
 
@@ -262,11 +294,27 @@ h2 {
 .fields textarea {
   width: 100%;
   padding: 0.65rem 0.75rem;
-  border: 1px solid #77758c;
-  border-radius: 0.45rem;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-control);
   font: inherit;
   color: var(--ink);
-  background: white;
+  background: var(--panel);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.fields input:focus,
+.fields select:focus,
+.fields textarea:focus {
+  outline: none;
+  border-color: var(--indigo);
+  box-shadow: var(--focus-ring);
+}
+
+.fields input:disabled,
+.fields select:disabled,
+.fields textarea:disabled {
+  background: var(--surface-soft);
+  color: var(--muted);
 }
 
 .fields input,
@@ -286,9 +334,20 @@ h2 {
 .fields fieldset {
   min-width: 0;
   margin: 0;
-  border: 1px solid var(--line);
-  border-radius: 0.45rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
   padding: 1rem;
+  background: var(--panel);
+}
+
+.fields .fields {
+  margin-block: 0;
+}
+
+.fields fieldset .fields fieldset {
+  border: none;
+  padding: 0;
+  background: none;
 }
 
 .fields .check-label {
@@ -311,10 +370,11 @@ h2 {
 
 .role-progress {
   margin-block: 1.5rem;
-  padding: clamp(1rem, 4vw, 1.75rem);
-  border: 1px solid var(--line);
-  border-radius: 0.75rem;
-  background: white;
+  padding: var(--space-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--panel);
+  box-shadow: var(--shadow-card);
   overflow-wrap: anywhere;
 }
 
@@ -322,6 +382,25 @@ h2 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
   gap: 1rem;
+}
+
+.dashboard-scores > div {
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--panel-muted);
+}
+
+.dashboard-scores dt {
+  color: var(--muted);
+  font-size: 0.875rem;
+  font-weight: 650;
+}
+
+.dashboard-scores dd {
+  margin: 0.25rem 0 0;
+  font-size: 1.1rem;
+  font-weight: 700;
 }
 
 .text-button {
@@ -466,5 +545,271 @@ h2 {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------------
+   Shared surfaces and components
+   --------------------------------------------------------------- */
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: var(--space-card);
+  box-shadow: var(--shadow-card);
+  min-width: 0;
+}
+
+.card + .card,
+.card + .list,
+.list + .card {
+  margin-top: 1.25rem;
+}
+
+.card-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  letter-spacing: -0.02em;
+}
+
+.card-body {
+  color: var(--ink);
+}
+
+.card-body > :first-child {
+  margin-top: 0;
+}
+
+.card-body > :last-child {
+  margin-bottom: 0;
+}
+
+.stack {
+  display: grid;
+  gap: var(--gap, 1rem);
+}
+
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gap, 0.75rem);
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--panel);
+  overflow: hidden;
+}
+
+.list-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.85rem var(--space-card);
+  border-top: 1px solid var(--border);
+  min-width: 0;
+}
+
+.list-row:first-child {
+  border-top: none;
+}
+
+.list-row:hover {
+  background: var(--panel-muted);
+}
+
+.list-row-main {
+  min-width: 0;
+  flex: 1 1 14rem;
+  overflow-wrap: anywhere;
+}
+
+.list-row-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1.4;
+  white-space: nowrap;
+  background: var(--status-todo-bg);
+  color: var(--status-todo-ink);
+}
+
+.badge-ok {
+  background: var(--status-ok-bg);
+  color: var(--status-ok-ink);
+}
+
+.badge-warn {
+  background: var(--status-warn-bg);
+  color: var(--status-warn-ink);
+}
+
+.badge-todo {
+  background: var(--status-todo-bg);
+  color: var(--status-todo-ink);
+}
+
+.page-header {
+  display: grid;
+  gap: 0.5rem;
+  padding-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.page-header h1 {
+  margin-block: 0;
+}
+
+.page-header-meta {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.progress {
+  width: 100%;
+  height: 0.6rem;
+  appearance: none;
+  border: none;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--surface-tint);
+}
+
+.progress::-webkit-progress-bar {
+  background: var(--surface-tint);
+}
+
+.progress::-webkit-progress-value {
+  background: var(--indigo);
+}
+
+.progress::-moz-progress-bar {
+  background: var(--indigo);
+}
+
+.empty-state {
+  display: grid;
+  justify-items: start;
+  gap: 0.6rem;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-card);
+  background: var(--panel-muted);
+}
+
+.empty-state h2,
+.empty-state h3 {
+  font-size: 1.15rem;
+}
+
+.empty-state p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.danger-zone {
+  margin-top: 2.5rem;
+  padding: var(--space-card);
+  border: 1px solid #e7c4c8;
+  border-radius: var(--radius-card);
+  background: var(--danger-bg);
+}
+
+.button-danger {
+  background: var(--danger);
+}
+
+.button-danger:hover:not(:disabled) {
+  background: #7d1520;
+}
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--panel);
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.option:hover {
+  border-color: var(--border-strong);
+}
+
+.option:has(input:checked) {
+  border-color: var(--indigo);
+  background: var(--surface-tint);
+  box-shadow: inset 0 0 0 1px var(--indigo);
+}
+
+.option input {
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.button,
+.button-secondary,
+.text-button {
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.button:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+/* Smaller screens: tighter card padding and single-column grids */
+@media (max-width: 760px) {
+  .grid-2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .page-header h1 {
+    font-size: clamp(1.6rem, 7vw, 2.1rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .list-row {
+    padding-inline: 1rem;
+  }
+
+  .dashboard-scores {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

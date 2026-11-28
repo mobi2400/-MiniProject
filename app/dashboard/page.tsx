@@ -77,52 +77,54 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
       <Link href="/">MiniProject</Link>
       <h1>Your preparations</h1>
 
-      <section aria-labelledby="find-jobs-heading" style={{ marginBlock: "1rem", padding: "1rem", background: "#f8f7fd", borderRadius: "0.5rem" }}>
-        <h2 id="find-jobs-heading" style={{ fontSize: "1.2rem", margin: "0 0 0.5rem" }}>Find jobs that match your CV</h2>
-        <p style={{ margin: "0 0 0.75rem", color: "var(--muted)" }}>Search job opportunities matching your skills and titles.</p>
+      <section className="card" aria-labelledby="find-jobs-heading">
+        <h2 className="card-title" id="find-jobs-heading">Find jobs that match your CV</h2>
+        <p className="list-row-meta">Search job opportunities matching your skills and titles.</p>
         <Link className="button button-secondary" href="/jobs">Search jobs</Link>
       </section>
 
       {!profile && (
-        <p style={{ color: "var(--muted)", marginBlock: "0.5rem" }}>
+        <p className="list-row-meta">
           Add your name and career goal first so we can personalize your preparation.{" "}
-          <Link href="/profile" style={{ color: "var(--indigo)", fontWeight: 700 }}>Complete profile</Link>
+          <Link href="/profile">Complete profile</Link>
         </p>
       )}
-      <div style={{ marginBlock: "1rem" }}>
+
+      <div className="cluster">
         <Link className="button" href="/preparations/new">{copy.addJobTitle}</Link>
       </div>
 
       {prepStages.length ? (
-        <section aria-label="Saved preparation cards" style={{ display: "grid", gap: "1rem", marginBlock: "1.5rem" }}>
-          {prepStages.map(({ prep, stage }) => (
-            <div
-              key={prep.id}
-              style={{
-                border: "1px solid var(--line)",
-                borderRadius: "0.75rem",
-                padding: "1.25rem",
-                background: role?.id === prep.id ? "#f5f3fe" : "white",
-              }}
-            >
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "1rem", flexWrap: "wrap" }}>
-                <div>
-                  <h3 style={{ margin: "0 0 0.25rem", fontSize: "1.25rem" }}>
-                    <Link href={`/dashboard?role=${encodeURIComponent(prep.id)}`}>{prep.title}</Link>
-                  </h3>
-                  <p style={{ margin: 0, color: "var(--muted)", fontSize: "0.9rem" }}>
-                    Step {stage.step} of 5: <strong>{stage.name}</strong>
-                  </p>
+        <section className="stack" aria-label="Saved preparation cards">
+          {prepStages.map(({ prep, stage }) => {
+            const isSelected = role?.id === prep.id;
+            return (
+              <div
+                key={prep.id}
+                className="card"
+                style={isSelected ? { borderColor: "var(--indigo)", background: "var(--panel-muted)" } : undefined}
+              >
+                <div className="card-header">
+                  <div>
+                    <h3 className="card-title">
+                      <Link href={`/dashboard?role=${encodeURIComponent(prep.id)}`}>{prep.title}</Link>
+                    </h3>
+                    <p className="list-row-meta">
+                      Step {stage.step} of 5: <strong>{stage.name}</strong>
+                    </p>
+                  </div>
+                  <Link className="button" href={stage.nextAction.href}>
+                    Continue
+                  </Link>
                 </div>
-                <Link className="button" href={stage.nextAction.href}>
-                  Continue
-                </Link>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </section>
       ) : (
-        <p>{copy.noJobsDashboard}</p>
+        <div className="empty-state">
+          <p>{copy.noJobsDashboard}</p>
+        </div>
       )}
 
       {await renderProgress()}
